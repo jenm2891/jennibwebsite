@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artist Shop</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/shop.css">
+ </head>
+ <body data-template-id="__page-root" class="light-mode min-h-screen relative">
+  <div class="blob-1" aria-hidden="true"></div>
+  <div class="blob-2" aria-hidden="true"></div>
+  <div class="blob-3" aria-hidden="true"></div>
+  <header class="relative z-10 w-full px-6 py-6">
+   <nav class="relative mx-auto flex w-full max-w-4xl items-center justify-center min-h-[44px]">
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+     <a href="/html/index.html" class="text-lg font-semibold text-pink-500 hover:underline">Home</a>
+     <a href="/html/portfolio.html" class="text-lg font-semibold text-green-500 hover:underline">Portfolio</a>
+     <a href="/html/bio.html" class="text-lg font-semibold text-yellow-500 hover:underline">Bio</a>
+     <a href="/html/commissions.html" class="text-lg font-semibold hover:underline" style="color: #4f6fa8;">Commissions</a>
+    </div>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
+     <button id="cart-btn" type="button" class="relative p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Open cart">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span id="cart-badge" class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center hidden">0</span>
+     </button>
+     <button id="theme-toggle" type="button" class="p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
+      <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
+      <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
+     </button>
+    </div>
+   </nav>
+  </header>
+  <main class="relative z-10 max-w-6xl mx-auto px-6 pb-16">
+   <section id="checkout-panel" class="hidden mx-auto mb-8 max-w-2xl rounded-[1.5rem] border border-pink-200/70 bg-white/80 p-6 shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur">
+    <h3 class="font-display text-2xl">Checkout</h3>
+    <p class="mt-2 text-sm opacity-80">Complete your purchase and receive a confirmation email.</p>
+    <form id="checkout-form" class="mt-4 space-y-3">
+     <input id="customer-name" class="w-full rounded-full border border-pink-200 px-4 py-2" placeholder="Your name" required>
+     <input id="customer-email" type="email" class="w-full rounded-full border border-pink-200 px-4 py-2" placeholder="Email" required>
+     <input id="shipping-address" class="w-full rounded-full border border-pink-200 px-4 py-2" placeholder="Shipping address" required>
+     <select id="shipping-method" class="w-full rounded-full border border-pink-200 px-4 py-2">
+      <option value="standard">Standard shipping</option>
+      <option value="express">Express shipping</option>
+     </select>
+     <button type="submit" class="w-full rounded-full bg-pink-500 px-4 py-2 font-semibold text-white transition hover:bg-pink-600">Place order</button>
+    </form>
+    <p id="checkout-message" class="mt-3 text-sm text-pink-600"></p>
+   </section>
+   <section class="text-center mt-8 mb-10 max-w-2xl mx-auto">
+    <div class="hero-intro">
+     <h2 data-template-id="shop-heading" class="canva-text font-display hero-title">Shop</h2>
+     <p data-template-id="shop-subheading" class="canva-text hero-description mt-4">Browse original artwork, prints, and collectible pieces.</p>
+    </div>
+   </section>
+   <div class="w-full max-w-md mx-auto mb-12 rounded-2xl overflow-hidden shadow-xl">
+    <img data-template-id="hero-image" class="canva-image hero-image w-full h-64 object-cover" loading="lazy" alt="Featured artwork" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='transparent'/%3E%3Ccircle cx='260' cy='250' r='140' fill='%23f4a3bb' fill-opacity='0.45'/%3E%3Ccircle cx='395' cy='330' r='145' fill='%235c7fbf' fill-opacity='0.32'/%3E%3Ccircle cx='520' cy='320' r='150' fill='%23a7d676' fill-opacity='0.38'/%3E%3Ccircle cx='420' cy='220' r='110' fill='%23fde047' fill-opacity='0.38'/%3E%3C/svg%3E">
+   </div>
+   <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"><!-- Product 1 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-1-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-1-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-1-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-1-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-1')"></button>
+     </div>
+    </article><!-- Product 2 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-2-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-2-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-2-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-2-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-2')"></button>
+     </div>
+    </article><!-- Product 3 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-3-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-3-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-3-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-3-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-3')"></button>
+     </div>
+    </article><!-- Product 4 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-4-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-4-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-4-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-4-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-4')"></button>
+     </div>
+    </article><!-- Product 5 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-5-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-5-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-5-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-5-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-5')"></button>
+     </div>
+    </article><!-- Product 6 -->
+    <article class="shop-card rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition-shadow"><img data-template-id="product-6-img" class="canva-image w-full h-56 object-cover" loading="lazy">
+     <div class="p-5">
+      <h3 data-template-id="product-6-name" class="canva-text font-display"></h3>
+      <p data-template-id="product-6-price" class="canva-text mt-1 font-bold"></p><button type="button" data-template-id="product-6-btn" class="canva-button mt-3 w-full py-2 rounded-full font-medium transition hover:opacity-90" onclick="addToCart('product-6')"></button>
+     </div>
+    </article>
+   </section>
+   <div class="scroll-arrow" aria-hidden="true"><span></span></div>
+   <footer class="mt-16 w-full max-w-4xl border-t border-current/20 pt-8 text-center">
+    <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
+     <a href="mailto:hello@jenni-b.com" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Contact">
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg>
+     </a>
+     <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="YouTube">
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M21.8 8.1a2.9 2.9 0 0 0-2.1-2.1C17.9 5.4 12 5.4 12 5.4s-5.9 0-7.7.6A2.9 2.9 0 0 0 2.2 8.1 30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .2 3.9 2.9 2.9 0 0 0 2.1 2.1c1.8.6 7.7.6 7.7.6s5.9 0 7.7-.6a2.9 2.9 0 0 0 2.1-2.1A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.2-3.9ZM10 15.5v-7l6 3.5-6 3.5Z"></path></svg>
+     </a>
+     <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="TikTok">
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M14.5 3c.8 1.7 2.2 2.8 4.1 3.1v3.4c-1.5-.1-2.8-.5-4.1-1.3v5.3a5.5 5.5 0 1 1-5.5-5.5c.2 0 .4 0 .7.1v3.3a2.3 2.3 0 1 0 1.8 2.3V3h1.9Z"></path></svg>
+     </a>
+     <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4.5"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
+     </a>
+     <a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="X">
+      <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
+     </a>
+    </div>
+    <p class="mt-4 text-xs opacity-70">© 2026 JenniBee. All rights reserved.</p>
+   </footer>
+  </main><!-- Cart overlay -->
+  <div id="cart-overlay" class="cart-overlay fixed inset-0 bg-black/40 z-40" onclick="closeCart()"></div><!-- Cart panel -->
+  <aside id="cart-panel" class="cart-panel fixed top-0 right-0 h-full w-80 max-w-full z-50 p-6 flex flex-col" style="background: var(--card-bg);" aria-label="Shopping cart">
+   <div class="cart-header flex justify-between items-center mb-6">
+    <h2 data-template-id="cart-title" class="canva-text font-display text-xl"></h2><button class="cart-close-btn" type="button" onclick="closeCart()" aria-label="Close cart"><i data-lucide="x" class="w-5 h-5"></i></button>
+   </div>
+   <div id="cart-items" class="flex-1 overflow-y-auto space-y-3"></div>
+   <div id="cart-empty" class="cart-empty-state flex-1 flex items-center justify-center">
+    <p data-template-id="cart-empty-text" class="canva-text opacity-60"></p>
+   </div>
+   <div id="cart-footer" class="cart-footer border-t pt-4 mt-4 hidden">
+    <div class="flex justify-between font-bold text-lg"><span>Total</span> <span id="cart-total">$0</span>
+    </div>
+   </div>
+  </aside>
+    <script src="/js/shop.js"></script>
+ </body>
+</html>
