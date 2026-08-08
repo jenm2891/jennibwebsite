@@ -38,7 +38,8 @@ const BLOG_ADMIN_EMAILS = String(process.env.BLOG_ADMIN_EMAILS || '')
   .split(',')
   .map((entry) => entry.trim().toLowerCase())
   .filter(Boolean);
-const BLOG_AUTH_SECRET = process.env.BLOG_AUTH_SECRET || 'replace-this-secret-in-production';
+const DEFAULT_BLOG_AUTH_SECRET = 'replace-this-secret-in-production';
+const BLOG_AUTH_SECRET = process.env.BLOG_AUTH_SECRET || DEFAULT_BLOG_AUTH_SECRET;
 
 const BLOG_SECTIONS = ['videos', 'articles', 'recipes', 'random', 'photo dump'];
 
@@ -56,6 +57,28 @@ const LEGACY_PLACEHOLDER_POST_IDS = new Set([
   'blog-photo-golden-hour',
   'blog-photo-city'
 ]);
+
+function isProductionEnvironment() {
+  return process.env.NODE_ENV === 'production';
+}
+
+function validateProductionSecurityConfig() {
+  if (!isProductionEnvironment()) {
+    return;
+  }
+
+  if (!process.env.BLOG_AUTH_SECRET) {
+    throw new Error('Missing BLOG_AUTH_SECRET in production.');
+  }
+
+  if (process.env.BLOG_AUTH_SECRET === DEFAULT_BLOG_AUTH_SECRET) {
+    throw new Error('BLOG_AUTH_SECRET must not use the default value in production.');
+  }
+
+  if (String(process.env.BLOG_AUTH_SECRET).length < 32) {
+    throw new Error('BLOG_AUTH_SECRET must be at least 32 characters in production.');
+  }
+}
 
 function createInitialBlogStore() {
   return {
@@ -428,7 +451,14 @@ function verifyBlogAuthToken(token) {
   const [payloadBase64, signature] = parts;
   const expected = signTokenPayload(payloadBase64);
 
-  if (signature !== expected) {
+  const signatureBuffer = Buffer.from(String(signature));
+  const expectedBuffer = Buffer.from(String(expected));
+
+  if (signatureBuffer.length !== expectedBuffer.length) {
+    return null;
+  }
+
+  if (!crypto.timingSafeEqual(signatureBuffer, expectedBuffer)) {
     return null;
   }
 
@@ -1600,6 +1630,8 @@ function createApp() {
 
   return app;
 }
+
+validateProductionSecurityConfig();
 
 const app = createApp();
 
