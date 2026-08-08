@@ -10,7 +10,9 @@
     "build": "npm run build:tailwind && npm run sync:html-assets",
     "build:static": "npm run build && node scripts/build-static-deploy.js",
     "deploy:prepare": "npm run build:static",
-    "deploy:ready": "node --test test/server.test.js && npm run build:static && echo 'Deploy ./dist as your publish directory (or html if your host is configured that way).'"
+    "deploy:ready": "node --test test/server.test.js && npm run build:static && echo 'Deploy ./dist as your publish directory (or html if your host is configured that way).'",
+    "cf:deploy": "npm run build:static && npx wrangler pages deploy dist --project-name jennibwebsite --branch main",
+    "cf:deploy:preview": "npm run build:static && npx wrangler pages deploy dist --project-name jennibwebsite --branch preview"
   },
   "keywords": [],
   "author": "",

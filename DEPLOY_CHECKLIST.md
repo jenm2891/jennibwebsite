@@ -8,10 +8,16 @@ Run this command from the project root:
 
 npm run deploy:ready
 
+For Cloudflare Wrangler deploys (recommended):
+
+npm run cf:deploy
+
 What it does:
 - Runs backend tests.
 - Rebuilds Tailwind CSS.
 - Rebuilds the static deployment bundle in dist.
+
+`npm run cf:deploy` does this and then deploys to Cloudflare Pages via Wrangler.
 
 ## Cloudflare Pages (GitHub) settings
 
@@ -25,6 +31,8 @@ Build configuration:
 - Build command: npm run build:static
 - Build output directory: dist
 - Root directory: leave blank unless this repo is in a monorepo subfolder
+
+If you deploy with Wrangler command (`npm run cf:deploy`) from local/CI, Cloudflare dashboard build command is not used for that deployment path.
 
 Important:
 - If Build output directory is set to html, css, js, or anything else, your assets can 404 and the site will look unstyled/non-responsive.
