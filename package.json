@@ -6,10 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:tailwind": "tailwindcss -c tailwind.config.js -i ./css/tailwind.input.css -o ./css/tailwind.generated.css --minify",
-    "build": "npm run build:tailwind",
-    "build:static": "npm run build:tailwind && node scripts/build-static-deploy.js",
+    "sync:html-assets": "node scripts/sync-html-assets.js",
+    "build": "npm run build:tailwind && npm run sync:html-assets",
+    "build:static": "npm run build && node scripts/build-static-deploy.js",
     "deploy:prepare": "npm run build:static",
-    "deploy:ready": "node --test test/server.test.js && npm run build:static && echo 'Deploy ./dist as your publish directory.'"
+    "deploy:ready": "node --test test/server.test.js && npm run build:static && echo 'Deploy ./dist as your publish directory (or html if your host is configured that way).'"
   },
   "keywords": [],
   "author": "",

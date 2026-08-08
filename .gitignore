@@ -33,5 +33,3 @@ data/blog-newsletter.json
 
 # generated deploy bundles
 dist/
-html/css/
-html/js/
