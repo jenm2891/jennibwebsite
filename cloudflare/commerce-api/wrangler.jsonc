@@ -1,0 +1,23 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "jennib-commerce-api",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "jennib-blog",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ],
+  "vars": {
+    "ALLOWED_ORIGINS": "https://jennibee.art",
+    "PUBLIC_SITE_ORIGIN": "https://jennibee.art",
+    "BLOG_ADMIN_USERNAMES": "",
+    "BLOG_ADMIN_EMAILS": "",
+    "ENVIRONMENT": "production"
+  }
+}

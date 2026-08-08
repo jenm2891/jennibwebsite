@@ -2,6 +2,7 @@ lucide.createIcons();
 
 const CART_STORAGE_KEY = 'jennib_cart_v1';
 const catalogContainer = document.getElementById('shop-catalog');
+const COMMERCE_API_BASE = resolveCommerceApiBase();
 
 // Add real image paths here as you upload assets (e.g. '/images/the-chair.jpg').
 const CARD_IMAGE_BY_PIECE = {
@@ -189,7 +190,7 @@ async function initializeShop() {
 
 async function loadProductsFromServer() {
   try {
-    const response = await fetch('/api/products', {
+    const response = await fetch(commerceUrl('/api/products'), {
       headers: {
         Accept: 'application/json'
       }
@@ -226,6 +227,28 @@ async function loadProductsFromServer() {
   } catch {
     // Keep fallback products when API is unavailable.
   }
+}
+
+function resolveCommerceApiBase() {
+  const configured = String(window.__CF_API_BASE || window.__COMMERCE_API_BASE || '').trim();
+
+  if (!configured) {
+    return '';
+  }
+
+  return configured.endsWith('/') ? configured.slice(0, -1) : configured;
+}
+
+function commerceUrl(pathname) {
+  if (!COMMERCE_API_BASE) {
+    return pathname;
+  }
+
+  if (pathname.startsWith('/')) {
+    return `${COMMERCE_API_BASE}${pathname}`;
+  }
+
+  return `${COMMERCE_API_BASE}/${pathname}`;
 }
 
 function renderCatalog() {

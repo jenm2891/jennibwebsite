@@ -12,7 +12,13 @@
     "deploy:prepare": "npm run build:static",
     "deploy:ready": "node --test test/server.test.js && npm run build:static && echo 'Deploy ./dist as your publish directory (or html if your host is configured that way).'",
     "cf:deploy": "npm run build:static && npx wrangler pages deploy dist --project-name jennibwebsite --branch main",
-    "cf:deploy:preview": "npm run build:static && npx wrangler pages deploy dist --project-name jennibwebsite --branch preview"
+    "cf:deploy:preview": "npm run build:static && npx wrangler pages deploy dist --project-name jennibwebsite --branch preview",
+    "cf:commerce:deploy": "npx wrangler@4 deploy --config cloudflare/commerce-api/wrangler.jsonc",
+    "cf:commerce:tail": "npx wrangler@4 tail --config cloudflare/commerce-api/wrangler.jsonc",
+    "cf:commerce:d1:migrate": "npx wrangler@4 d1 migrations apply jennib-blog --remote --config cloudflare/commerce-api/wrangler.jsonc",
+    "cf:commerce:secret:blog": "npx wrangler@4 secret put BLOG_AUTH_SECRET --config cloudflare/commerce-api/wrangler.jsonc",
+    "cf:commerce:secret:stripe": "npx wrangler@4 secret put STRIPE_SECRET_KEY --config cloudflare/commerce-api/wrangler.jsonc",
+    "cf:cutover:verify": "node scripts/verify-cloudflare-cutover.js"
   },
   "keywords": [],
   "author": "",

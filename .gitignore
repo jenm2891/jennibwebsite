@@ -33,3 +33,7 @@ data/blog-newsletter.json
 
 # generated deploy bundles
 dist/
+
+# cloudflare local runtime state
+.wrangler/
+**/.wrangler/
