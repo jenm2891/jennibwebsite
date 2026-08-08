@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Checkout</title>
+  <script src="https://js.stripe.com/dahlia/stripe.js"></script>
+  <link rel="stylesheet" href="/css/tailwind.generated.css">
+  <script src="/js/vendor/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/checkout.css">
+</head>
+ <body data-template-id="__page-root" class="light-mode min-h-screen relative">
+  <div class="blob-1" aria-hidden="true"></div>
+  <div class="blob-2" aria-hidden="true"></div>
+  <div class="blob-3" aria-hidden="true"></div>
+  <header class="relative z-10 w-full px-6 py-6">
+   <nav class="relative mx-auto flex w-full max-w-4xl items-center justify-center min-h-[44px]">
+    <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+    <a href="/html/index.html" class="text-lg font-semibold hover:underline" style="color: #ec4899;">Home</a>
+    <a href="/html/shop.html" class="text-lg font-semibold hover:underline" style="color: #22c55e;">Shop</a>
+    <a href="/html/portfolio.html" class="text-lg font-semibold hover:underline" style="color: #eab308;">Portfolio</a>
+     <a href="/html/commissions.html" class="text-lg font-semibold hover:underline" style="color: #4f6fa8;">Commissions</a>
+     <a href="/html/bio.html" class="text-lg font-semibold hover:underline" style="color: rgb(200, 122, 255);">Bio</a>
+    <a href="/html/blog.html" class="text-lg font-semibold hover:underline" style="color: #ec4899;">Blog</a>
+    </div>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
+     <a href="/html/checkout.html" class="relative p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Go to checkout">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span data-cart-badge class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center hidden">0</span>
+     </a>
+     <button id="theme-toggle" type="button" class="p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
+      <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
+      <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
+     </button>
+    </div>
+   </nav>
+  </header>
+  <main class="relative z-10 mx-auto flex w-full max-w-4xl flex-col gap-6 px-6 pb-12 pt-4">
+  <section class="checkout-surface rounded-[28px] p-6 backdrop-blur-sm">
+    <h1 class="font-display hero-title text-center">Checkout</h1>
+    <p class="hero-description text-center">Complete your order securely with Stripe.</p>
+   </section>
+   <section class="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
+    <div class="checkout-surface rounded-[28px] p-6 backdrop-blur-sm">
+     <div id="contact-details-element">
+      <!-- Stripe injects the Contact Details Element here. -->
+     </div>
+     <div id="payment-element" class="mt-6"></div>
+    <button id="pay-button" type="button" class="checkout-primary-btn mt-6 w-full rounded-full px-6 py-3 text-base font-semibold transition disabled:cursor-not-allowed disabled:opacity-50" disabled>Pay</button>
+      <a href="/html/shop.html" class="checkout-secondary-btn mt-3 inline-flex w-full items-center justify-center rounded-full px-6 py-3 text-base font-semibold transition">Continue shopping</a>
+     <div id="confirm-errors" class="mt-4 min-h-6 text-sm text-[#b63b61]" role="alert" aria-live="polite"></div>
+    </div>
+    <aside id="checkout-container" class="checkout-surface rounded-[28px] p-6 backdrop-blur-sm" aria-live="polite">Loading checkout...</aside>
+   </section>
+   <script src="/js/cart-badge.js"></script>
+   <script src="/js/checkout.js"></script>
+  </main>
+</body>
+</html>

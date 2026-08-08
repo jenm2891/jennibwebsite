@@ -4,27 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Artist Bio Page</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="/css/tailwind.generated.css">
+  <script src="/js/vendor/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bio.css">
  </head>
- <body data-template-id="__page-root" class="light-mode min-h-screen relative overflow-hidden">
+ <body data-template-id="__page-root" class="light-mode min-h-screen relative">
   <div class="blob-1" aria-hidden="true"></div>
   <div class="blob-2" aria-hidden="true"></div>
   <div class="blob-3" aria-hidden="true"></div>
   <header class="relative z-10 w-full px-6 py-6">
    <nav class="relative mx-auto flex w-full max-w-4xl items-center justify-center min-h-[44px]">
     <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-     <a href="/html/index.html" class="text-lg font-semibold text-pink-500 hover:underline">Home</a>
-     <a href="/html/shop.html" class="text-lg font-semibold text-green-500 hover:underline">Shop</a>
-     <a href="/html/portfolio.html" class="text-lg font-semibold text-yellow-500 hover:underline">Portfolio</a>
+    <a href="/html/index.html" class="text-lg font-semibold hover:underline" style="color: #ec4899;">Home</a>
+    <a href="/html/shop.html" class="text-lg font-semibold hover:underline" style="color: #22c55e;">Shop</a>
+    <a href="/html/portfolio.html" class="text-lg font-semibold hover:underline" style="color: #eab308;">Portfolio</a>
      <a href="/html/commissions.html" class="text-lg font-semibold hover:underline" style="color: #4f6fa8;">Commissions</a>
+    <a href="/html/blog.html" class="text-lg font-semibold hover:underline" style="color: rgb(200, 122, 255);">Blog</a>
     </div>
-    <button id="theme-toggle" type="button" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
-     <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
-     <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
-    </button>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
+     <a href="/html/checkout.html" class="relative p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Go to checkout">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span data-cart-badge class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center hidden">0</span>
+     </a>
+     <button id="theme-toggle" type="button" class="p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
+      <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
+      <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
+     </button>
+    </div>
    </nav>
   </header>
   <main class="relative z-10 flex flex-col items-center px-6 pb-16">
@@ -55,25 +62,26 @@
    <div class="scroll-arrow" aria-hidden="true"><span></span></div>
    <footer class="mt-16 w-full max-w-4xl border-t border-current/20 pt-8 text-center">
     <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
-     <a href="mailto:hello@jenni-b.com" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Contact">
+     <a href="mailto:jenni@jennibee.com" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Contact">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg>
      </a>
-     <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="YouTube">
+     <a href="https://www.youtube.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="YouTube">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M21.8 8.1a2.9 2.9 0 0 0-2.1-2.1C17.9 5.4 12 5.4 12 5.4s-5.9 0-7.7.6A2.9 2.9 0 0 0 2.2 8.1 30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .2 3.9 2.9 2.9 0 0 0 2.1 2.1c1.8.6 7.7.6 7.7.6s5.9 0 7.7-.6a2.9 2.9 0 0 0 2.1-2.1A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.2-3.9ZM10 15.5v-7l6 3.5-6 3.5Z"></path></svg>
      </a>
-     <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="TikTok">
+     <a href="https://www.tiktok.com/j3nn1b33eth" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="TikTok">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M14.5 3c.8 1.7 2.2 2.8 4.1 3.1v3.4c-1.5-.1-2.8-.5-4.1-1.3v5.3a5.5 5.5 0 1 1-5.5-5.5c.2 0 .4 0 .7.1v3.3a2.3 2.3 0 1 0 1.8 2.3V3h1.9Z"></path></svg>
      </a>
-     <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Instagram">
+     <a href="https://www.instagram.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Instagram">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4.5"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
      </a>
-     <a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="X">
+     <a href="https://x.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="X">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
      </a>
     </div>
     <p class="mt-4 text-xs opacity-70">© 2026 JenniBee. All rights reserved.</p>
    </footer>
   </main>
-  <script src="/js/bio.js"></script>
+    <script src="/js/cart-badge.js"></script>
+    <script src="/js/bio.js"></script>
  </body>
 </html>

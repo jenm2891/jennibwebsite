@@ -1,0 +1,32 @@
+# dependencies
+node_modules/
+
+# environment and secrets
+.env
+.env.*
+!.env.example
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# macOS
+.DS_Store
+
+# coverage / reports
+coverage/
+.nyc_output/
+
+# runtime app data
+data/blog-store.json
+data/blog-email-outbox.json
+data/blog-newsletter.json
+
+# editor temp files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.swp
+*.swo

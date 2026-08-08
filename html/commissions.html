@@ -4,76 +4,262 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Commissions</title>
-  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link rel="stylesheet" href="/css/tailwind.generated.css">
+  <script src="/js/vendor/lucide.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&amp;family=Playfair+Display:wght@700;900&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/commissions.css">
  </head>
- <body data-template-id="__page-root" class="light-mode min-h-screen relative overflow-hidden">
+ <body class="light-mode min-h-screen relative">
   <div class="blob-1" aria-hidden="true"></div>
   <div class="blob-2" aria-hidden="true"></div>
   <div class="blob-3" aria-hidden="true"></div>
   <header class="relative z-10 w-full px-6 py-6">
    <nav class="relative mx-auto flex w-full max-w-4xl items-center justify-center min-h-[44px]">
     <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-     <a href="/html/index.html" class="text-lg font-semibold text-pink-500 hover:underline">Home</a>
-     <a href="/html/shop.html" class="text-lg font-semibold text-green-500 hover:underline">Shop</a>
-     <a href="/html/portfolio.html" class="text-lg font-semibold text-yellow-500 hover:underline">Portfolio</a>
-     <a href="/html/bio.html" class="text-lg font-semibold text-pink-300 hover:underline">Bio</a>
+    <a href="/html/index.html" class="text-lg font-semibold hover:underline" style="color: #ec4899;">Home</a>
+    <a href="/html/shop.html" class="text-lg font-semibold hover:underline" style="color: #22c55e;">Shop</a>
+    <a href="/html/portfolio.html" class="text-lg font-semibold hover:underline" style="color: #eab308;">Portfolio</a>
+    <a href="/html/bio.html" class="text-lg font-semibold hover:underline" style="color: #4f6fa8;">Bio</a>
+    <a href="/html/blog.html" class="text-lg font-semibold hover:underline" style="color: rgb(200, 122, 255);">Blog</a>
     </div>
-    <button id="theme-toggle" type="button" class="absolute right-0 top-1/2 -translate-y-1/2 p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
-     <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
-     <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
-    </button>
+    <div class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2">
+     <a href="/html/checkout.html" class="relative p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Go to checkout">
+      <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+      <span data-cart-badge class="absolute -top-1 -right-1 w-5 h-5 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center hidden">0</span>
+     </a>
+     <button id="theme-toggle" type="button" class="p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
+      <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
+      <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
+     </button>
+    </div>
    </nav>
   </header>
   <main class="relative z-10 flex flex-col items-center px-6 pb-16">
    <section class="text-center mt-8 mb-10 max-w-2xl">
     <div class="hero-intro">
-     <h2 data-template-id="artist-name" class="canva-text font-display hero-title">Commissions</h2>
-     <p data-template-id="artist-tagline" class="canva-text hero-description mt-4">Contact me for custom artwork!</p>
+     <p class="hero-kicker">Art, Websites, dAPPS and more</p>
+     <h2 class="font-display hero-title">Commissions</h2>
+    <p class="hero-description mt-4">designed with <span class="color-heart" aria-label="heart" role="img">♥</span> by J3nn1b33</p>
     </div>
    </section>
    <div class="w-full max-w-md mb-12 rounded-2xl overflow-hidden shadow-xl">
-    <img data-template-id="hero-image" class="canva-image hero-image w-full h-64 object-cover" loading="lazy" alt="Featured artwork" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='transparent'/%3E%3Ccircle cx='260' cy='250' r='140' fill='%23f4a3bb' fill-opacity='0.45'/%3E%3Ccircle cx='395' cy='330' r='145' fill='%235c7fbf' fill-opacity='0.32'/%3E%3Ccircle cx='520' cy='320' r='150' fill='%23a7d676' fill-opacity='0.38'/%3E%3Ccircle cx='420' cy='220' r='110' fill='%23fde047' fill-opacity='0.38'/%3E%3C/svg%3E">
+    <img class="hero-image w-full h-64 object-cover" loading="lazy" alt="Featured artwork" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='transparent'/%3E%3Ccircle cx='260' cy='250' r='140' fill='%23f4a3bb' fill-opacity='0.45'/%3E%3Ccircle cx='395' cy='330' r='145' fill='%235c7fbf' fill-opacity='0.32'/%3E%3Ccircle cx='520' cy='320' r='150' fill='%23a7d676' fill-opacity='0.38'/%3E%3Ccircle cx='420' cy='220' r='110' fill='%23fde047' fill-opacity='0.38'/%3E%3C/svg%3E">
    </div>
-   <section class="bio-card rounded-2xl p-8 md:p-12 max-w-2xl w-full shadow-lg border border-pink-100 flex flex-col items-center text-center">
-    <hr class="w-16 border-t-2 border-pink-300 mb-6">
-    <p data-template-id="bio-paragraph-1" class="canva-text leading-relaxed"></p>
-    <p data-template-id="bio-paragraph-2" class="canva-text leading-relaxed mt-4"></p>
-   </section>
-   <section class="mt-10 max-w-2xl w-full text-center">
-    <h2 data-template-id="mediums-heading" class="canva-text font-display"></h2>
-    <div class="flex flex-wrap justify-center gap-3 mt-4"><span data-template-id="medium-1" class="canva-tag medium-tag px-4 py-2 rounded-full text-sm font-medium"></span> <span data-template-id="medium-2" class="canva-tag medium-tag px-4 py-2 rounded-full text-sm font-medium"></span> <span data-template-id="medium-3" class="canva-tag medium-tag px-4 py-2 rounded-full text-sm font-medium"></span> <span data-template-id="medium-4" class="canva-tag medium-tag px-4 py-2 rounded-full text-sm font-medium"></span> <span data-template-id="medium-5" class="canva-tag medium-tag px-4 py-2 rounded-full text-sm font-medium"></span>
+  <section class="pricing-section" id="art-pricing">
+  <h2 class="section-title">Art Commissions</h2>
+   <div class="pricing-grid">
+    <div class="pricing-card">
+    <div class="card-header pink-accent">
+     <h3>Personal Use</h3>
+     <span class="price">Starts at $350</span>
     </div>
-   </section>
-   <section class="mt-10 max-w-2xl w-full text-center">
-    <h2 data-template-id="contact-heading" class="canva-text font-display"></h2>
-    <p data-template-id="contact-email" class="canva-text mt-3 text-lg"></p>
-    <p data-template-id="contact-location" class="canva-text mt-1 opacity-70"></p>
-   </section>
+    <ul class="features-list">
+     <li>Custom digital illustration</li>
+     <li>High-res files for personal printing</li>
+     <li>2 revision rounds</li>
+     <li>Strictly non-commercial</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-1" class="btn pink-btn">Request Quote</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header mint-accent">
+     <h3>Commercial Vector</h3>
+     <span class="price">Starts at $700</span>
+    </div>
+    <ul class="features-list">
+     <li>Bespoke graphic vector designs</li>
+     <li>Full commercial usage rights</li>
+     <li>Apparel and merchandise ready</li>
+     <li>Scalable source files included</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-2" class="btn mint-btn">Request Quote</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header red-accent">
+     <h3>NFT Custom Mint</h3>
+     <span class="price">+$150 Fee</span>
+    </div>
+    <ul class="features-list">
+     <li>Smart contract deployment</li>
+     <li>Metadata management</li>
+     <li>Multi-chain (Polygon, Solana, ETH)</li>
+     <li>Buyer pays network gas fees</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-3" class="btn red-btn">Request Quote</button>
+    </div>
+   </div>
+  </section>
+
+  <section class="pricing-section" id="web-pricing">
+   <h2 class="section-title">Freelance Web Development</h2>
+   <div class="pricing-grid">
+    <div class="pricing-card">
+    <div class="card-header blue-accent">
+     <h3>CMS Foundations</h3>
+     <span class="price">Starts at $1,200</span>
+    </div>
+    <ul class="features-list">
+     <li>WordPress, Wix, or Squarespace</li>
+     <li>Responsive design setup</li>
+     <li>Custom branding integration</li>
+     <li>Basic SEO and security setup</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-4" class="btn blue-btn">Start Project</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header violet-accent">
+     <h3>Interactive Front-End</h3>
+     <span class="price">Starts at $3,500</span>
+    </div>
+    <ul class="features-list">
+     <li>Custom HTML, CSS, JavaScript</li>
+     <li>Dynamic UI and UX components</li>
+     <li>Custom e-commerce carts</li>
+     <li>API integrations</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-5" class="btn violet-btn">Start Project</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header pink-accent">
+     <h3>Full-Stack Architecture</h3>
+     <span class="price">$65/hour</span>
+    </div>
+    <ul class="features-list">
+     <li>Python, C#, or PHP backend</li>
+     <li>Complex database management</li>
+     <li>Blockchain dev integration</li>
+     <li>Advanced security protocols</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-6" class="btn pink-btn">Start Project</button>
+    </div>
+   </div>
+  </section>
+
+  <section class="pricing-section" id="dapps-pricing">
+   <h2 class="section-title">dAPPS Development</h2>
+   <p class="section-subtitle">Custom blockchain products for real users</p>
+   <div class="pricing-grid">
+    <div class="pricing-card">
+    <div class="card-header mint-accent">
+     <h3>Smart Contract Launch</h3>
+     <span class="price">Starts at $2,200</span>
+    </div>
+    <ul class="features-list">
+     <li>Solidity contract architecture</li>
+     <li>ERC-20, ERC-721, or ERC-1155 support</li>
+     <li>Testnet deployment and walkthrough</li>
+     <li>Owner/admin controls setup</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-7" class="btn mint-btn">Start Build</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header red-accent">
+     <h3>dApp Front-End Experience</h3>
+     <span class="price">Starts at $3,200</span>
+    </div>
+    <ul class="features-list">
+     <li>Wallet connect (MetaMask and WalletConnect)</li>
+     <li>Transaction flows and status states</li>
+     <li>Responsive custom interface</li>
+     <li>API and contract integration</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-8" class="btn red-btn">Start Build</button>
+    </div>
+    <div class="pricing-card">
+    <div class="card-header blue-accent">
+     <h3>Full dApp Product Stack</h3>
+     <span class="price">Starts at $5,500</span>
+    </div>
+    <ul class="features-list">
+     <li>Contract + front-end architecture</li>
+     <li>Minting, marketplace, or staking flows</li>
+     <li>Security and gas optimization pass</li>
+     <li>Launch support and handoff docs</li>
+    </ul>
+    <button type="button" data-commission-package-id="commission-9" class="btn blue-btn">Start Build</button>
+    </div>
+   </div>
+  </section>
+
+  <section class="tos-section" id="terms">
+   <div class="tos-container">
+    <h2 class="section-title">Terms of Use &amp; Licensing</h2>
+    <p class="section-subtitle">Client Agreement for Web Services &amp; Art Commissions</p>
+
+    <div class="tos-intro">
+     <p>By remitting the initial deposit or formally accepting a project proposal, the Client agrees to the following terms of service with j3nn1b33.</p>
+    </div>
+
+    <div class="tos-block border-mint">
+     <h3 class="mint-accent-text">1. Web Development Services</h3>
+
+     <h4>Scope of Work &amp; Revisions</h4>
+     <p>Specific features, page counts, and functionalities will be outlined in a separate Project Proposal. The Client is entitled to two (2) rounds of revisions during the development phase. Additional revisions or structural changes requested after milestone approval are billed at the standard hourly rate.</p>
+
+     <h4>Handover &amp; Maintenance</h4>
+     <p>Upon final payment, administrative access and source code will be transferred to the Client. Unless a separate ongoing maintenance retainer is signed, j3nn1b33 is not responsible for future site updates, plugin breakages, or server hosting issues after handover.</p>
+    </div>
+
+    <div class="tos-block border-pink">
+     <h3 class="pink-accent-text">2. Art Commissions &amp; Licensing</h3>
+
+     <h4>Personal Use</h4>
+     <p>Unless explicitly stated, commissioned artwork is for personal use only. The Client may not reproduce, sell, or distribute the artwork for profit.</p>
+
+     <h4>Commercial Licensing</h4>
+     <p>If purchasing bespoke graphic vectors or designs for brand or merchandise use, a Commercial License must be explicitly detailed and priced in the invoice. The artist retains the right to display the work in professional portfolios.</p>
+
+     <h4>NFT Minting &amp; Blockchain</h4>
+     <p>For custom minted NFTs, the setup fee covers smart contract deployment and metadata management only. The Client is solely responsible for all variable network gas fees incurred on their chosen chain (e.g., Ethereum, Polygon, Solana).</p>
+    </div>
+
+    <div class="tos-block border-blue">
+     <h3 class="blue-accent-text">3. Payments &amp; Cancellations</h3>
+
+     <h4>Payment Structure</h4>
+     <p>A 50% non-refundable deposit is required before any design, development, or artwork begins. The remaining 50% balance is due upon project completion, prior to the transfer of final files, web domains, or NFT minting.</p>
+
+     <h4>Cancellations</h4>
+     <p>If the Client cancels after work has commenced, the deposit is forfeited. If canceled in the final stages, the Client will be billed for total hours worked, not exceeding the project estimate.</p>
+    </div>
+
+    <div class="tos-block border-red">
+     <h3 class="red-accent-text">4. Governing Law</h3>
+     <p>This Agreement shall be governed by and construed in accordance with the laws of the State of Florida. Any disputes arising from this Agreement shall be resolved in the appropriate courts within this jurisdiction.</p>
+    </div>
+   </div>
+  </section>
+
+  <section class="quick-actions mt-5 w-full max-w-3xl text-center">
+   <p id="commission-cart-message" class="text-sm text-pink-700" aria-live="polite"></p>
+   <div class="mt-4 flex flex-wrap justify-center gap-3">
+    <a href="/html/shop.html" class="ghost-cta">Continue Shopping</a>
+    <a href="/html/checkout.html" class="primary-cta">Go To Checkout</a>
+   </div>
+  </section>
    <div class="scroll-arrow" aria-hidden="true"><span></span></div>
    <footer class="mt-16 w-full max-w-4xl border-t border-current/20 pt-8 text-center">
     <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
-     <a href="mailto:hello@jenni-b.com" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Contact">
+     <a href="mailto:jenni@jennibee.com" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Contact">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"></path><path d="m4 7 8 6 8-6"></path></svg>
      </a>
-     <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="YouTube">
+     <a href="https://www.youtube.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="YouTube">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M21.8 8.1a2.9 2.9 0 0 0-2.1-2.1C17.9 5.4 12 5.4 12 5.4s-5.9 0-7.7.6A2.9 2.9 0 0 0 2.2 8.1 30.8 30.8 0 0 0 2 12a30.8 30.8 0 0 0 .2 3.9 2.9 2.9 0 0 0 2.1 2.1c1.8.6 7.7.6 7.7.6s5.9 0 7.7-.6a2.9 2.9 0 0 0 2.1-2.1A30.8 30.8 0 0 0 22 12a30.8 30.8 0 0 0-.2-3.9ZM10 15.5v-7l6 3.5-6 3.5Z"></path></svg>
      </a>
-     <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="TikTok">
+     <a href="https://www.tiktok.com/j3nn1b33eth" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="TikTok">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="currentColor"><path d="M14.5 3c.8 1.7 2.2 2.8 4.1 3.1v3.4c-1.5-.1-2.8-.5-4.1-1.3v5.3a5.5 5.5 0 1 1-5.5-5.5c.2 0 .4 0 .7.1v3.3a2.3 2.3 0 1 0 1.8 2.3V3h1.9Z"></path></svg>
      </a>
-     <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Instagram">
+     <a href="https://www.instagram.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="Instagram">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4.5"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
      </a>
-     <a href="https://x.com/" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="X">
+     <a href="https://x.com/j3nn1b33" target="_blank" rel="noopener noreferrer" class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-current/20 transition hover:bg-current/10" aria-label="X">
       <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12"></path><path d="M18 6 6 18"></path></svg>
      </a>
     </div>
-    <p class="mt-4 text-xs opacity-70">© 2026 JenniBee. All rights reserved.</p>
+    <p class="mt-4 text-xs opacity-70">designed with love by J3nn1b33</p>
    </footer>
   </main>
-  <script src="/js/commissions.js"></script>
+    <script src="/js/cart-badge.js"></script>
+    <script src="/js/commissions.js"></script>
  </body>
 </html>

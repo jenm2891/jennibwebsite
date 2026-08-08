@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author Dashboard</title>
+  <link rel="stylesheet" href="/css/tailwind.generated.css">
+  <script src="/js/vendor/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/blog-dashboard.css">
+</head>
+<body class="light-mode min-h-screen relative">
+  <header class="relative z-10 w-full px-6 py-6">
+    <nav class="relative mx-auto flex w-full max-w-5xl items-center justify-between min-h-[44px]">
+      <a href="/html/blog.html" class="text-lg font-semibold" style="color: pink;">Back to Blog</a>
+      <button id="theme-toggle" type="button" class="p-2 rounded-full border border-current opacity-70 hover:opacity-100 transition" aria-label="Toggle dark mode">
+        <i data-lucide="sun" class="w-5 h-5 block dark-icon hidden"></i>
+        <i data-lucide="moon" class="w-5 h-5 block light-icon"></i>
+      </button>
+    </nav>
+  </header>
+
+  <main class="relative z-10 mx-auto w-full max-w-5xl px-6 pb-16">
+    <section class="panel rounded-2xl p-6">
+      <h1 class="font-display text-4xl">Author Dashboard</h1>
+      <p id="dashboard-status" class="mt-2 opacity-85">Login with an admin account to manage blog posts.</p>
+
+      <form id="dashboard-login-form" class="mt-4 grid gap-3 md:grid-cols-3">
+        <input id="dashboard-username" class="auth-input rounded-xl border px-3 py-2" placeholder="username" autocomplete="username" required>
+        <input id="dashboard-password" type="password" class="auth-input rounded-xl border px-3 py-2" placeholder="password" autocomplete="current-password" required>
+        <button type="submit" class="action-btn rounded-full px-5 py-2">Login</button>
+      </form>
+    </section>
+
+    <section class="panel rounded-2xl p-6 mt-6" id="create-panel">
+      <h2 class="font-display text-3xl">Create Post</h2>
+      <form id="create-post-form" class="mt-4 grid gap-3">
+        <input name="title" class="auth-input rounded-xl border px-3 py-2" placeholder="Title" required>
+        <select name="category" class="auth-input rounded-xl border px-3 py-2" required>
+          <option value="videos">Videos</option>
+          <option value="articles">Articles</option>
+          <option value="recipes">Recipes</option>
+          <option value="random">Random</option>
+          <option value="photo dump">Photo Dump</option>
+        </select>
+        <select name="type" class="auth-input rounded-xl border px-3 py-2" required>
+          <option value="written">Written</option>
+          <option value="vlog">Vlog</option>
+        </select>
+        <input name="videoUrl" class="auth-input rounded-xl border px-3 py-2" placeholder="Video URL (for vlog posts)">
+        <textarea name="summary" class="auth-input rounded-xl border px-3 py-2" rows="2" placeholder="Summary" required></textarea>
+        <textarea name="body" class="auth-input rounded-xl border px-3 py-2" rows="6" placeholder="Body" required></textarea>
+        <label><input name="allowInteractions" type="checkbox" checked> Allow interactions</label>
+        <label><input name="allowComments" type="checkbox" checked> Allow comments</label>
+        <button type="submit" class="action-btn rounded-full px-5 py-2 w-fit">Create Post</button>
+      </form>
+    </section>
+
+    <section class="panel rounded-2xl p-6 mt-6" id="edit-panel">
+      <h2 class="font-display text-3xl">Edit Existing Post</h2>
+      <form id="edit-post-form" class="mt-4 grid gap-3">
+        <select id="edit-post-id" name="postId" class="auth-input rounded-xl border px-3 py-2" required></select>
+        <input name="title" class="auth-input rounded-xl border px-3 py-2" placeholder="Title" required>
+        <select name="category" class="auth-input rounded-xl border px-3 py-2" required>
+          <option value="videos">Videos</option>
+          <option value="articles">Articles</option>
+          <option value="recipes">Recipes</option>
+          <option value="random">Random</option>
+          <option value="photo dump">Photo Dump</option>
+        </select>
+        <select name="type" class="auth-input rounded-xl border px-3 py-2" required>
+          <option value="written">Written</option>
+          <option value="vlog">Vlog</option>
+        </select>
+        <input name="videoUrl" class="auth-input rounded-xl border px-3 py-2" placeholder="Video URL (for vlog posts)">
+        <textarea name="summary" class="auth-input rounded-xl border px-3 py-2" rows="2" placeholder="Summary" required></textarea>
+        <textarea name="body" class="auth-input rounded-xl border px-3 py-2" rows="6" placeholder="Body" required></textarea>
+        <label><input name="allowInteractions" type="checkbox"> Allow interactions</label>
+        <label><input name="allowComments" type="checkbox"> Allow comments</label>
+        <button type="submit" class="action-btn rounded-full px-5 py-2 w-fit">Save Changes</button>
+      </form>
+    </section>
+  </main>
+
+  <script src="/js/blog-dashboard.js"></script>
+</body>
+</html>
