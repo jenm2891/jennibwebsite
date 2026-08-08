@@ -9,6 +9,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      CF_PAGES_PROJECT: jennibwebsite
 
     steps:
       - name: Checkout
@@ -26,8 +28,25 @@ jobs:
       - name: Build static bundle
         run: npm run build:static
 
+      - name: Validate deploy secrets
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CF_API_TOKEN" ]; then
+            echo "Missing required GitHub secret: CF_API_TOKEN"
+            exit 1
+          fi
+          if [ -z "$CF_ACCOUNT_ID" ]; then
+            echo "Missing required GitHub secret: CF_ACCOUNT_ID"
+            exit 1
+          fi
+
+      - name: Verify Wrangler CLI
+        run: npx --yes wrangler@4 --version
+
       - name: Deploy with Wrangler CLI
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
-        run: npx wrangler@4 pages deploy dist --project-name jennibwebsite --branch "${{ github.ref_name }}"
+        run: npx --yes wrangler@4 pages deploy dist --project-name "$CF_PAGES_PROJECT" --branch "${{ github.ref_name }}"
