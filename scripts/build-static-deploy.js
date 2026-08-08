@@ -108,6 +108,8 @@ function main() {
   copyDir(path.join(root, 'css'), path.join(distDir, 'css'));
   copyClientJs();
   copyDir(path.join(root, 'images'), path.join(distDir, 'images'));
+  fs.copyFileSync(path.join(root, 'robots.txt'), path.join(distDir, 'robots.txt'));
+  fs.copyFileSync(path.join(root, 'sitemap.xml'), path.join(distDir, 'sitemap.xml'));
 
   writeRootIndexRedirect();
 
