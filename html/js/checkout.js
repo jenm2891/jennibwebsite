@@ -6,6 +6,7 @@ const toggle = document.getElementById('theme-toggle');
 const summaryContainer = document.getElementById('checkout-container');
 const payButton = document.getElementById('pay-button');
 const errors = document.getElementById('confirm-errors');
+const COMMERCE_API_BASE = resolveCommerceApiBase();
 
 function buildAppearance(isDarkMode) {
   const palette = isDarkMode
@@ -129,7 +130,7 @@ async function initializeCheckout() {
 
     setStatus('Loading checkout...');
 
-    const { publishableKey } = await fetchJson('/api/checkout-config');
+    const { publishableKey } = await fetchJson(commerceUrl('/api/checkout-config'));
 
     if (!window.Stripe) {
       throw new Error('Stripe.js did not load.');
@@ -137,7 +138,7 @@ async function initializeCheckout() {
 
     const stripe = window.Stripe(publishableKey);
     const appearance = buildAppearance(body.classList.contains('dark-mode'));
-    const sessionData = await fetchJson('/create-checkout-session', {
+    const sessionData = await fetchJson(commerceUrl('/create-checkout-session'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -197,6 +198,28 @@ async function initializeCheckout() {
     errors.textContent = error.message || 'Unable to load checkout.';
     payButton.disabled = true;
   }
+}
+
+function resolveCommerceApiBase() {
+  const configured = String(window.__CF_API_BASE || window.__COMMERCE_API_BASE || '').trim();
+
+  if (!configured) {
+    return '';
+  }
+
+  return configured.endsWith('/') ? configured.slice(0, -1) : configured;
+}
+
+function commerceUrl(pathname) {
+  if (!COMMERCE_API_BASE) {
+    return pathname;
+  }
+
+  if (pathname.startsWith('/')) {
+    return `${COMMERCE_API_BASE}${pathname}`;
+  }
+
+  return `${COMMERCE_API_BASE}/${pathname}`;
 }
 
 function loadCartItems() {

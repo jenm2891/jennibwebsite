@@ -1,6 +1,7 @@
 window.lucide?.createIcons();
 
 const BLOG_AUTH_STORAGE_KEY = 'jennib_blog_auth_token_v1';
+const BLOG_API_BASE = resolveBlogApiBase();
 const state = {
   token: localStorage.getItem(BLOG_AUTH_STORAGE_KEY) || '',
   user: null,
@@ -252,7 +253,7 @@ function setStatus(message) {
 }
 
 async function fetchJson(url, options) {
-  const response = await fetch(url, options);
+  const response = await fetch(toBlogApiUrl(url), options);
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
@@ -262,4 +263,22 @@ async function fetchJson(url, options) {
   }
 
   return data;
+}
+
+function resolveBlogApiBase() {
+  const configured = String(window.__CF_API_BASE || window.__BLOG_API_BASE || window.__COMMERCE_API_BASE || '').trim();
+
+  if (!configured) {
+    return '';
+  }
+
+  return configured.endsWith('/') ? configured.slice(0, -1) : configured;
+}
+
+function toBlogApiUrl(url) {
+  if (!BLOG_API_BASE || !String(url).startsWith('/')) {
+    return url;
+  }
+
+  return `${BLOG_API_BASE}${url}`;
 }
