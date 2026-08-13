@@ -13,6 +13,12 @@
       "database_id": "R74d2c5d7-ad53-4175-a0ef-177358f8c4bd"
     }
   ],
+  "routes": [
+    {
+      "pattern": "api.jennibee.art",
+      "custom_domain": true
+    }
+  ],
   "vars": {
     "ALLOWED_ORIGINS": "https://jennibee.art",
     "PUBLIC_SITE_ORIGIN": "https://jennibee.art",
