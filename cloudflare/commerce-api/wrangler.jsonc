@@ -1,5 +1,5 @@
 {
-  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "$schema": "/Users/jenniferchavez/jennibwebsite/cloudflare/commerce-api/migrations/0001_blog_schema.sql",
   "name": "jennib-commerce-api",
   "main": "src/index.js",
   "compatibility_date": "2026-08-08",
@@ -10,14 +10,14 @@
     {
       "binding": "DB",
       "database_name": "jennib-blog",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      "database_id": "R74d2c5d7-ad53-4175-a0ef-177358f8c4bd"
     }
   ],
   "vars": {
     "ALLOWED_ORIGINS": "https://jennibee.art",
     "PUBLIC_SITE_ORIGIN": "https://jennibee.art",
-    "BLOG_ADMIN_USERNAMES": "",
-    "BLOG_ADMIN_EMAILS": "",
+    "BLOG_ADMIN_USERNAMES": "j3nn1b33",
+    "BLOG_ADMIN_EMAILS": "jenni@jennibee.art",
     "ENVIRONMENT": "production"
   }
 }
