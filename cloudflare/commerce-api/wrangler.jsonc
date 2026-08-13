@@ -1,5 +1,4 @@
 {
-  "$schema": "/Users/jenniferchavez/jennibwebsite/cloudflare/commerce-api/migrations/0001_blog_schema.sql",
   "name": "jennib-commerce-api",
   "main": "src/index.js",
   "compatibility_date": "2026-08-08",
@@ -10,13 +9,7 @@
     {
       "binding": "DB",
       "database_name": "jennib-blog",
-      "database_id": "R74d2c5d7-ad53-4175-a0ef-177358f8c4bd"
-    }
-  ],
-  "routes": [
-    {
-      "pattern": "api.jennibee.art",
-      "custom_domain": true
+      "database_id": "74d2c5d7-ad53-4175-a0ef-177358f8c4bd"
     }
   ],
   "vars": {
