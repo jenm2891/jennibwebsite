@@ -1,23 +1,30 @@
 const CORS_HEADERS = {
-  'Access-Control-Allow-Methods': 'GET,POST,PUT,OPTIONS',
+  'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Auth-Token'
 };
 
 export function getAllowedOrigins(env) {
   const configured = String(env.ALLOWED_ORIGINS || '').trim();
-  if (!configured) {
-    return [];
+  if (configured) {
+    return configured
+      .split(',')
+      .map((value) => value.trim())
+      .filter(Boolean);
   }
 
-  return configured
-    .split(',')
-    .map((value) => value.trim())
-    .filter(Boolean);
+  // VIP List Default - Prevents the list from ever being empty!
+  return [
+    "https://jennibee.art",
+    "https://www.jennibee.art",
+    "http://localhost:8788",
+    "http://localhost:3000"
+  ];
 }
 
 export function withCorsHeaders(request, env, extraHeaders = {}) {
   const headers = new Headers({
     ...CORS_HEADERS,
+    'Access-Control-Max-Age': '86400', // Cache this strict policy for 24 hours
     ...extraHeaders
   });
 
@@ -27,8 +34,9 @@ export function withCorsHeaders(request, env, extraHeaders = {}) {
   if (origin && allowedOrigins.includes(origin)) {
     headers.set('Access-Control-Allow-Origin', origin);
     headers.set('Vary', 'Origin');
-  } else if (allowedOrigins.length === 0) {
-    headers.set('Access-Control-Allow-Origin', '*');
+  } else {
+    // Strict Fallback - Removed the '*' wildcard and replaced it with your secure domain
+    headers.set('Access-Control-Allow-Origin', 'https://jennibee.art');
   }
 
   return headers;
