@@ -394,7 +394,22 @@ async function issuePasswordReset(user, request, env) {
      WHERE id = ?`
   ).bind(tokenHash, expiresAt, user.id).run();
 
-  return `${getBaseOriginForLinks(request, env)}/html/blog.html?resetToken=${encodeURIComponent(token)}`;
+  const resetUrl = `${getBaseOriginForLinks(request, env)}/html/blog.html?resetToken=${encodeURIComponent(token)}`;
+
+  // Send the password reset email!
+  await sendEmail(
+    user.email,
+    "Reset your JenniBee password",
+    `
+Password Reset
+
+Click here to choose a new password. This link expires in 30 minutes.
+
+`,
+    env
+  );
+
+  return resetUrl;
 }
 
 async function userCount(env) {
