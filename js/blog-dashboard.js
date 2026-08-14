@@ -23,11 +23,14 @@ async function bootstrap() {
     await fetchCurrentUser();
   }
 
+  updateDashboardAuthUI();
+
   if (!state.user?.isAdmin) {
     setStatus('Login with an admin account to manage posts.');
     return;
   }
 
+  setStatus(`Welcome back, @${state.user.username}!`);
   await loadAdminPosts();
 }
 
@@ -49,6 +52,16 @@ function bindEvents() {
 
   postPicker?.addEventListener('change', () => {
     syncEditForm();
+  });
+
+  const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
+  dashboardLogoutBtn?.addEventListener('click', () => {
+    state.token = '';
+    state.user = null;
+    localStorage.removeItem(BLOG_AUTH_STORAGE_KEY);
+    
+    updateDashboardAuthUI();
+    setStatus('Logged out. Please log in to manage posts.');
   });
 }
 
@@ -106,6 +119,9 @@ async function login() {
     }
 
     setStatus(`Logged in as @${state.user.username}.`);
+
+    updateDashboardAuthUI();
+
     await loadAdminPosts();
   } catch (error) {
     setStatus(error.message || 'Login failed.');
@@ -263,6 +279,39 @@ async function fetchJson(url, options) {
   }
 
   return data;
+}
+
+function updateDashboardAuthUI() {
+  const isLoggedInAdmin = Boolean(state.token && state.user?.isAdmin);
+
+  if (loginForm) {
+    loginForm.classList.toggle('hidden', isLoggedInAdmin);
+  }
+  if (createForm) {
+    createForm.classList.toggle('hidden', !isLoggedInAdmin);
+  }
+  if (editForm) {
+    editForm.classList.toggle('hidden', !isLoggedInAdmin);
+  }
+  
+  // If you added a logout button with ID 'dashboard-logout-btn' to your HTML, this will show/hide it!
+  const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
+  if (dashboardLogoutBtn) {
+    dashboardLogoutBtn.classList.toggle('hidden', !isLoggedInAdmin);
+  }
+}
+function updateDashboardAuthUI() {
+  const isLoggedInAdmin = Boolean(state.token && state.user?.isAdmin);
+
+  if (loginForm) {
+    loginForm.classList.toggle('hidden', isLoggedInAdmin);
+  }
+  if (createForm) {
+    createForm.classList.toggle('hidden', !isLoggedInAdmin);
+  }
+  if (editForm) {
+    editForm.classList.toggle('hidden', !isLoggedInAdmin);
+  }
 }
 
 function resolveBlogApiBase() {

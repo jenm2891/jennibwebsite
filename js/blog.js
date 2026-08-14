@@ -227,14 +227,20 @@ async function loginAccount() {
 
     setAuth(data.token, data.user);
     updateAuthUI();
+    closeAuthModal();
 
-    if (data.user.emailVerified) {
-      renderStatus(`Logged in as ${data.user.username}.`);
-    } else {
-      renderStatus(`Logged in as ${data.user.username}. Verify your email to interact.`);
+    // If an admin logs in from the main blog, take them straight to the dashboard!
+    if (data.user.isAdmin) {
+      window.location.href = '/html/blog-dashboard.html';
+      return;
     }
 
-    closeAuthModal();
+    if (data.user.emailVerified) {
+      renderStatus(`Logged in as @${data.user.username}.`);
+    } else {
+      renderStatus(`Logged in as @${data.user.username}. Verify your email to interact.`);
+    }
+
     await loadBlog();
   } catch (error) {
     renderStatus(error.message || 'Login failed.');

@@ -224,6 +224,35 @@ function getBlogAuthSecret(env) {
   return secret;
 }
 
+async function sendEmail(toEmail, subject, htmlContent, env) {
+  const apiKey = env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.log("No Resend API Key found. Skipping actual email delivery.");
+    return false;
+  }
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        // For the free tier, the "from" address must be this specific testing address
+        from: "JenniBee ", 
+        to: [toEmail],
+        subject: subject,
+        html: htmlContent
+      })
+    });
+    return response.ok;
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    return false;
+  }
+}
+
 function getBaseOriginForLinks(request, env) {
   const origin = request.headers.get('Origin');
   if (origin) {
@@ -336,7 +365,22 @@ async function issueEmailVerification(user, request, env) {
      WHERE id = ?`
   ).bind(tokenHash, expiresAt, user.id).run();
 
-  return `${getBaseOriginForLinks(request, env)}/html/blog.html?verifyToken=${encodeURIComponent(token)}`;
+  const verifyUrl = `${getBaseOriginForLinks(request, env)}/html/blog.html?verifyToken=${encodeURIComponent(token)}`;
+
+  // Send the actual email!
+  await sendEmail(
+    user.email,
+    "Verify your JenniBee account",
+    `
+Welcome!
+
+Click here to verify your email.
+
+`,
+    env
+  );
+
+  return verifyUrl;
 }
 
 async function issuePasswordReset(user, request, env) {
