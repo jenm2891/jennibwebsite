@@ -193,48 +193,56 @@ header nav a:hover {
     font-size: 1.45rem;
   }
 }
-/* Styling for preview thumbnails */
-.preview-img {
-  width: 200px;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.preview-img:hover {
-  opacity: 0.7;
-}
+
+/* =========================================
+   MODAL STYLING (Updated)
+   ========================================= */
 
 /* The Modal (background overlay) */
 .modal {
-  display: none; 
-  position: fixed; 
-  z-index: 1000; 
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1000; /* Sit on top of everything */
   left: 0;
   top: 0;
   width: 100%; 
   height: 100%; 
-  background-color: rgba(0, 0, 0, 0.9); /* Black background with opacity */
+  background-color: rgba(0, 0, 0, 0.85); /* Black with 85% opacity */
+  
+  /* Flexbox to perfectly center the image */
+  align-items: center; 
+  justify-content: center;
+}
+
+/* JS adds this class to make the modal visible */
+.modal.show-modal {
+  display: flex; 
 }
 
 /* The Full Image itself */
 .modal-content {
-  margin: auto;
-  display: block;
-  max-width: 80%;
-  max-height: 80%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  max-width: 90%;
+  max-height: 90vh; /* Prevents image from being taller than the screen */
+  border-radius: 8px;
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
 }
 
 /* The Close Button */
 .close-btn {
   position: absolute;
-  top: 15px;
+  top: 20px;
   right: 35px;
-  color: #fff;
+  color: #f1f1f1;
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
+  z-index: 1010;
 }
 
+.close-btn:hover,
+.close-btn:focus {
+  color: #ec4899; /* Matching your pink theme color */
+  text-decoration: none;
+  cursor: pointer;
+}

@@ -6,11 +6,11 @@ const COMMERCE_API_BASE = resolveCommerceApiBase();
 
 // Add real image paths here as you upload assets (e.g. '/images/the-chair.jpg').
 const CARD_IMAGE_BY_PIECE = {
-  'Studio Sticker Pack Vol. 1': '',
-  'Studio Sticker Pack Vol. 2': '',
-  'The Chair': '',
-  'Summers End': '',
-  'The Bookshelf': '',
+  'King Germutt Sticker': 'Images/kinggermutt.png',
+  'Germutt # 3': 'Images/Germutt3.png',
+  'The Chair': 'Images/Chair.png',
+  'The Kitchen': 'Images/thekitchen.PNG',
+  'The Bookshelf': 'Images/thebookshelf.PNG',
   'Sunrise': '',
   'Dreams of Dreaming': '',
   'The Window': '',
@@ -22,13 +22,13 @@ const CARD_IMAGE_BY_PIECE = {
 };
 
 const STICKER_PACK_LISTINGS = [
-  { pieceName: 'Studio Sticker Pack Vol. 1', label: '5-Piece High-Quality Vinyl Pack', price: 500 },
-  { pieceName: 'Studio Sticker Pack Vol. 2', label: '8-Piece Collector Vinyl Pack', price: 1200 }
+  { pieceName: 'King Germutt Sticker', label: 'High-Quality Vinyl Sticker 5 pack', price: 500 },
+  { pieceName: 'Germutt # 3', label: 'High-Quality Vinyl Sticker 5 pack', price: 500 }
 ];
 
 const DIGITAL_ART_PIECES = [
   'The Chair',
-  'Summers End',
+  'The Kitchen',
   'The Bookshelf',
   'Sunrise',
   'Dreams of Dreaming'
@@ -37,34 +37,19 @@ const DIGITAL_ART_PIECES = [
 const ONE_OF_ONE_LISTINGS = [
   {
     pieceName: 'The Window',
-    label: 'Exclusive 1/1 Digital Artwork (Single Edition Download)',
-    price: 35000
+    label: 'Original Physical Artwork (Small 9x12) - Acrylic on Archival Paper' ,
+    price: 40000
   },
   {
     pieceName: 'Heart of the 80s',
-    label: 'Original Physical Artwork - Acrylic on Archival Paper (5\'9")',
-    price: 180000
+    label: 'Original Physical Artwork (Small 5x9) - Acrylic on Archival Paper',
+    price: 25000
   },
   {
     pieceName: 'Floral Fall',
-    label: 'Original Physical Artwork (Small 9x12 to 11x14)',
-    price: 55000
-  },
-  {
-    pieceName: 'Floral Fall',
-    label: 'Original Physical Artwork (Medium 16x20 to 18x24)',
-    price: 95000
-  },
-  {
-    pieceName: 'Floral Fall',
-    label: 'Original Physical Artwork (Large 24x36+)',
-    price: 150000
-  },
-  {
-    pieceName: 'Into the Void',
-    label: 'Exclusive 1/1 Digital Artwork (Single Edition Download)',
-    price: 45000
-  }
+    label: 'Original Physical Artwork (Small 5x9) - Acrylic on Archival Paper',
+    price: 25000
+  }, 
 ];
 
 const PATTERN_PIECES = [
