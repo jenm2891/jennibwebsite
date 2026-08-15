@@ -282,16 +282,4 @@ function toBlogApiUrl(url) {
 
   return `${BLOG_API_BASE}${url}`;
 }
-// Public Blog Elements
-const openAuthModalBtn = document.getElementById('open-auth-modal');
-const closeAuthModalBtn = document.getElementById('close-auth-modal');
-const authModal = document.getElementById('auth-modal');
 
-// (Further down inside your bindEvents function)
-  openAuthModalBtn?.addEventListener('click', () => {
-    authModal?.classList.remove('hidden');
-  });
-
-  closeAuthModalBtn?.addEventListener('click', () => {
-    authModal?.classList.add('hidden');
-  });
