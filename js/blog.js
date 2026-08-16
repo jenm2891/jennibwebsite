@@ -20,6 +20,9 @@ const newsletterForm = document.getElementById('newsletter-form');
 const newsletterEmail = document.getElementById('newsletter-email');
 const newsletterStatus = document.getElementById('newsletter-status');
 
+// Blog Post Elements
+const blogSectionsEl = document.getElementById('blog-sections');
+
 initializeThemeToggle();
 bindEvents();
 void bootstrap();
@@ -28,6 +31,9 @@ async function bootstrap() {
   if (state.token) {
     await fetchCurrentUser();
   }
+  
+  // Fetch and display posts when the page loads
+  await fetchPublicPosts();
 }
 
 function bindEvents() {
@@ -86,6 +92,9 @@ async function login(username, password) {
     if (state.user.isAdmin) {
       document.getElementById('author-dashboard-link-wrap')?.classList.remove('hidden');
     }
+    
+    // Refresh posts to show correct "like" status for the logged-in user
+    await fetchPublicPosts();
     
   } catch (error) {
     setStatus(error.message || 'Login failed.');
@@ -160,6 +169,100 @@ async function subscribeNewsletter() {
   } catch (error) {
     if (newsletterStatus) newsletterStatus.textContent = error.message || 'Failed to subscribe.';
   }
+}
+
+// --- PUBLIC POSTS RENDERING ---
+async function fetchPublicPosts() {
+  try {
+    const data = await fetchJson('/api/blog/posts', {
+      headers: authHeaders() // Sends token if logged in (so they can see what they've liked)
+    });
+    
+    renderPosts(data.sections || [], data.posts || []);
+  } catch (error) {
+    if (blogSectionsEl) {
+      blogSectionsEl.innerHTML = `<p class="text-red-500 opacity-80 text-center">Failed to load posts: ${error.message}</p>`;
+    }
+  }
+}
+
+function renderPosts(sections, posts) {
+  if (!blogSectionsEl) return;
+  blogSectionsEl.innerHTML = ''; // Clear out any old content
+
+  if (posts.length === 0) {
+    blogSectionsEl.innerHTML = '<p class="opacity-70 text-center">No posts yet. Check back soon!</p>';
+    return;
+  }
+
+  // Group posts by their categories
+  sections.forEach(section => {
+    const sectionPosts = posts.filter(p => p.category === section);
+    
+    // If there are no posts in this category, skip it
+    if (sectionPosts.length === 0) return; 
+
+    const sectionWrapper = document.createElement('div');
+    sectionWrapper.className = 'blog-category-section mb-10';
+
+    // Capitalize the section title (e.g. "videos" -> "Videos")
+    const sectionTitle = document.createElement('h2');
+    sectionTitle.className = 'font-display text-3xl mb-4 capitalize';
+    sectionTitle.textContent = section;
+    sectionWrapper.appendChild(sectionTitle);
+
+    const grid = document.createElement('div');
+    grid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+
+    // Build a card for each post
+    sectionPosts.forEach(post => {
+      const article = document.createElement('article');
+      article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col';
+      
+      let mediaHtml = '';
+      if (post.type === 'vlog' && post.videoUrl) {
+         mediaHtml = `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><iframe src="${post.videoUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>`;
+      }
+
+      const dateStr = new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+
+      // Build the card HTML
+      article.innerHTML = `
+        ${mediaHtml}
+        <div class="flex items-center gap-2 mb-2 text-xs opacity-70">
+          <span>${dateStr}</span>
+          <span>&bull;</span>
+          <span class="capitalize px-2 py-0.5 rounded-full border border-current/20">${post.type}</span>
+        </div>
+        <h3 class="font-display text-xl font-bold mb-2">${escapeHtml(post.title)}</h3>
+        <p class="text-sm opacity-85 mb-4">${escapeHtml(post.summary)}</p>
+        <div class="flex items-center gap-4 text-sm font-medium mt-auto border-t border-current/10 pt-3">
+          <span class="flex items-center gap-1 ${post.likedByCurrentUser ? 'text-pink-500' : 'opacity-70'}"><i data-lucide="heart" class="w-4 h-4"></i> ${post.likes}</span>
+          <span class="flex items-center gap-1 opacity-70"><i data-lucide="message-circle" class="w-4 h-4"></i> ${post.comments?.length || 0}</span>
+        </div>
+      `;
+      grid.appendChild(article);
+    });
+
+    sectionWrapper.appendChild(grid);
+    blogSectionsEl.appendChild(sectionWrapper);
+  });
+
+  // Tell Lucide to draw the heart/message icons we just generated
+  window.lucide?.createIcons();
+}
+
+// A helper to make sure any text from the database is safe to display
+function escapeHtml(str) {
+   return String(str || '').replace(/[&<>'"]/g, 
+     tag => ({
+       '&': '&amp;',
+       '<': '&lt;',
+       '>': '&gt;',
+       "'": '&#39;',
+       '"': '&quot;'
+     }[tag])
+   );
 }
 
 // --- UTILITIES ---
