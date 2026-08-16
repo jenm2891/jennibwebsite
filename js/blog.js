@@ -11,9 +11,14 @@ const state = {
 const openAuthModalBtn = document.getElementById('open-auth-modal');
 const closeAuthModalBtn = document.getElementById('close-auth-modal');
 const authModal = document.getElementById('auth-modal');
-const authForm = document.getElementById('auth-form');
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const loginTabBtn = document.getElementById('login-tab-btn');
+const signupTabBtn = document.getElementById('signup-tab-btn');
 const authStatusEl = document.getElementById('auth-status');
-const registerBtn = document.getElementById('register-btn');
+const heroAccountEl = document.getElementById('hero-account');
+const heroUsernamePillEl = document.getElementById('hero-username-pill');
+const userPillEl = document.getElementById('user-pill');
 
 // Newsletter Elements
 const newsletterForm = document.getElementById('newsletter-form');
@@ -31,7 +36,9 @@ async function bootstrap() {
   if (state.token) {
     await fetchCurrentUser();
   }
-  
+
+  updateAuthUI();
+
   // Fetch and display posts when the page loads
   await fetchPublicPosts();
 }
@@ -46,17 +53,23 @@ function bindEvents() {
     authModal?.classList.add('hidden');
   });
 
-  authForm?.addEventListener('submit', (event) => {
+  loginTabBtn?.addEventListener('click', () => setAuthTab('login'));
+  signupTabBtn?.addEventListener('click', () => setAuthTab('signup'));
+
+  loginForm?.addEventListener('submit', (event) => {
     event.preventDefault();
-    const username = document.getElementById('auth-username')?.value;
-    const password = document.getElementById('auth-password')?.value;
+    const username = document.getElementById('login-username')?.value;
+    const password = document.getElementById('login-password')?.value;
     void login(username, password);
   });
 
-  registerBtn?.addEventListener('click', (event) => {
+  signupForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     void registerPublic();
   });
+
+  document.getElementById('logout-btn')?.addEventListener('click', () => logout());
+  document.getElementById('hero-logout-btn')?.addEventListener('click', () => logout());
 
   // Newsletter Subscription
   newsletterForm?.addEventListener('submit', (event) => {
@@ -86,13 +99,15 @@ async function login(username, password) {
     state.user = data.user;
     localStorage.setItem(BLOG_AUTH_STORAGE_KEY, data.token);
 
+    if (state.user.isAdmin) {
+      window.location.href = './blog-dashboard.html';
+      return;
+    }
+
     setStatus(`Welcome back, @${state.user.username}!`);
     setTimeout(() => authModal?.classList.add('hidden'), 1500);
-      
-    if (state.user.isAdmin) {
-      document.getElementById('author-dashboard-link-wrap')?.classList.remove('hidden');
-    }
-    
+    updateAuthUI();
+
     // Refresh posts to show correct "like" status for the logged-in user
     await fetchPublicPosts();
     
@@ -102,9 +117,9 @@ async function login(username, password) {
 }
 
 async function registerPublic() {
-  const username = String(document.getElementById('auth-username')?.value || '').trim().toLowerCase();
-  const email = String(document.getElementById('auth-email')?.value || '').trim();
-  const password = String(document.getElementById('auth-password')?.value || '');
+  const username = String(document.getElementById('signup-username')?.value || '').trim().toLowerCase();
+  const email = String(document.getElementById('signup-email')?.value || '').trim();
+  const password = String(document.getElementById('signup-password')?.value || '');
 
   if (!username || !email || !password) {
     setStatus('Username, email, and password are required.');
@@ -124,6 +139,7 @@ async function registerPublic() {
     
     setStatus(`Account created! Welcome, @${state.user.username}.`);
     setTimeout(() => authModal?.classList.add('hidden'), 2000);
+    updateAuthUI();
   } catch (error) {
     setStatus(error.message || 'Registration failed.');
   }
@@ -135,15 +151,50 @@ async function fetchCurrentUser() {
       headers: authHeaders()
     });
     state.user = data.user;
-    
-    if (state.user?.isAdmin) {
-       document.getElementById('author-dashboard-link-wrap')?.classList.remove('hidden');
-    }
   } catch {
     state.user = null;
     state.token = '';
     localStorage.removeItem(BLOG_AUTH_STORAGE_KEY);
   }
+}
+
+function logout() {
+  state.user = null;
+  state.token = '';
+  localStorage.removeItem(BLOG_AUTH_STORAGE_KEY);
+  updateAuthUI();
+  setStatus('Logged out.');
+  void fetchPublicPosts();
+}
+
+function updateAuthUI() {
+  const isLoggedIn = Boolean(state.token && state.user);
+
+  openAuthModalBtn?.classList.toggle('hidden', isLoggedIn);
+  heroAccountEl?.classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('logout-btn')?.classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('author-dashboard-link-wrap')?.classList.toggle('hidden', !state.user?.isAdmin);
+
+  if (isLoggedIn) {
+    const label = `@${state.user.username}`;
+    if (heroUsernamePillEl) heroUsernamePillEl.textContent = label;
+    if (userPillEl) {
+      userPillEl.textContent = label;
+      userPillEl.classList.remove('hidden');
+    }
+  } else if (userPillEl) {
+    userPillEl.classList.add('hidden');
+  }
+}
+
+function setAuthTab(tab) {
+  const isLogin = tab === 'login';
+  loginForm?.classList.toggle('hidden', !isLogin);
+  signupForm?.classList.toggle('hidden', isLogin);
+  loginTabBtn?.classList.toggle('is-active', isLogin);
+  signupTabBtn?.classList.toggle('is-active', !isLogin);
+  loginTabBtn?.setAttribute('aria-selected', String(isLogin));
+  signupTabBtn?.setAttribute('aria-selected', String(!isLogin));
 }
 
 // --- NEWSLETTER FUNCTION ---
@@ -220,8 +271,14 @@ function renderPosts(sections, posts) {
       article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col';
       
       let mediaHtml = '';
+      if (post.imageUrl) {
+        mediaHtml += `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy">`;
+      }
       if (post.type === 'vlog' && post.videoUrl) {
-         mediaHtml = `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><iframe src="${post.videoUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>`;
+        const isUploadedVideo = post.videoUrl.startsWith('data:video');
+        mediaHtml += isUploadedVideo
+          ? `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><video src="${escapeHtml(post.videoUrl)}" class="w-full h-full" controls></video></div>`
+          : `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><iframe src="${escapeHtml(post.videoUrl)}" class="w-full h-full" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" referrerpolicy="no-referrer"></iframe></div>`;
       }
 
       const dateStr = new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });

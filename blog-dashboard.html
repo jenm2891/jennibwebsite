@@ -36,6 +36,7 @@
     <section class="panel rounded-2xl p-6">
       <h1 class="font-display text-4xl">Author Dashboard</h1>
       <p id="dashboard-status" class="mt-2 opacity-85">Login with an admin account to manage blog posts.</p>
+      <button id="dashboard-logout-btn" type="button" class="post-action-btn hidden mt-2">Logout</button>
 
       <form id="dashboard-login-form" class="mt-4 grid gap-3 md:grid-cols-3">
         <input id="dashboard-username" class="auth-input rounded-xl border px-3 py-2" placeholder="username" autocomplete="username" required>
@@ -60,6 +61,10 @@
           <option value="vlog">Vlog</option>
         </select>
         <input name="videoUrl" class="auth-input rounded-xl border px-3 py-2" placeholder="Video URL (for vlog posts)">
+        <label class="text-sm opacity-80">Or upload a video clip (max 8MB)</label>
+        <input name="videoFile" type="file" accept="video/*" class="auth-input rounded-xl border px-3 py-2">
+        <label class="text-sm opacity-80">Photo (max 8MB)</label>
+        <input name="imageFile" type="file" accept="image/*" class="auth-input rounded-xl border px-3 py-2">
         <textarea name="summary" class="auth-input rounded-xl border px-3 py-2" rows="2" placeholder="Summary" required></textarea>
         <textarea name="body" class="auth-input rounded-xl border px-3 py-2" rows="6" placeholder="Body" required></textarea>
         <label><input name="allowInteractions" type="checkbox" checked> Allow interactions</label>
@@ -85,6 +90,14 @@
           <option value="vlog">Vlog</option>
         </select>
         <input name="videoUrl" class="auth-input rounded-xl border px-3 py-2" placeholder="Video URL (for vlog posts)">
+        <label class="text-sm opacity-80">Or upload a video clip (max 8MB, replaces current)</label>
+        <input name="videoFile" type="file" accept="video/*" class="auth-input rounded-xl border px-3 py-2">
+        <div id="edit-current-image-wrap" class="hidden">
+          <p class="text-sm opacity-70">Current photo:</p>
+          <img id="edit-current-image" class="w-32 h-32 object-cover rounded-lg" alt="Current post photo">
+        </div>
+        <label class="text-sm opacity-80">Photo (max 8MB, replaces current)</label>
+        <input name="imageFile" type="file" accept="image/*" class="auth-input rounded-xl border px-3 py-2">
         <textarea name="summary" class="auth-input rounded-xl border px-3 py-2" rows="2" placeholder="Summary" required></textarea>
         <textarea name="body" class="auth-input rounded-xl border px-3 py-2" rows="6" placeholder="Body" required></textarea>
         <label><input name="allowInteractions" type="checkbox"> Allow interactions</label>

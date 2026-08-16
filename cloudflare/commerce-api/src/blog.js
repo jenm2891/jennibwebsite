@@ -9,6 +9,7 @@ const BLOG_MAX_COMMENTS_PER_POST = 200;
 const BLOG_TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
 const BLOG_VERIFY_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 const BLOG_RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
+const BLOG_MAX_UPLOAD_DATA_URL_LENGTH = 8_000_000;
 
 const encoder = new TextEncoder();
 let schemaReady = false;
@@ -109,6 +110,11 @@ function slugify(value) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 48);
+}
+
+function isSafeMediaUrl(value, dataUrlPrefix) {
+  if (!value) return true;
+  return value.startsWith('https://') || value.startsWith(dataUrlPrefix);
 }
 
 function timingSafeStringEquals(a, b) {
@@ -496,6 +502,7 @@ async function getBlogPostResponse(env, post, currentUserId = '') {
     summary: post.summary,
     body: post.body,
     videoUrl: post.video_url || '',
+    imageUrl: post.image_url || '',
     publishedAt: toIsoDate(post.published_at),
     allowInteractions: intToBool(post.allow_interactions),
     allowComments: intToBool(post.allow_comments),
@@ -973,6 +980,7 @@ function parsePostInput(body, currentPost = null) {
   const summary = sanitizeInputText(body?.summary ?? currentPost?.summary, 240);
   const postBody = sanitizeInputText(body?.body ?? currentPost?.body, 5000);
   const videoUrl = String(body?.videoUrl ?? currentPost?.video_url ?? '').trim();
+  const imageUrl = String(body?.imageUrl ?? currentPost?.image_url ?? '').trim();
   const allowInteractions = typeof body?.allowInteractions === 'boolean'
     ? body.allowInteractions
     : currentPost
@@ -1000,6 +1008,22 @@ function parsePostInput(body, currentPost = null) {
     return { error: 'Video URL can only be set for vlog posts.' };
   }
 
+  if (videoUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+    return { error: 'Uploaded video is too large.' };
+  }
+
+  if (imageUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+    return { error: 'Uploaded photo is too large.' };
+  }
+
+  if (!isSafeMediaUrl(videoUrl, 'data:video/')) {
+    return { error: 'Video URL must be an https link or an uploaded video file.' };
+  }
+
+  if (!isSafeMediaUrl(imageUrl, 'data:image/')) {
+    return { error: 'Image URL must be an https link or an uploaded image file.' };
+  }
+
   return {
     value: {
       title,
@@ -1008,6 +1032,7 @@ function parsePostInput(body, currentPost = null) {
       summary,
       body: postBody,
       videoUrl,
+      imageUrl,
       allowInteractions,
       allowComments
     }
@@ -1055,8 +1080,8 @@ async function handleAdminPosts(request, env) {
     await env.DB.prepare(
       `INSERT INTO posts (
         id, title, category, type, summary, body,
-        video_url, published_at, allow_interactions, allow_comments
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+        video_url, image_url, published_at, allow_interactions, allow_comments
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(
       postId,
       input.title,
@@ -1065,6 +1090,7 @@ async function handleAdminPosts(request, env) {
       input.summary,
       input.body,
       input.videoUrl,
+      input.imageUrl,
       publishedAt,
       boolToInt(input.allowInteractions),
       boolToInt(input.allowComments)
@@ -1120,7 +1146,7 @@ async function handleAdminPostUpdate(request, env, postId) {
   await env.DB.prepare(
     `UPDATE posts
      SET title = ?, category = ?, type = ?, summary = ?, body = ?,
-         video_url = ?, allow_interactions = ?, allow_comments = ?
+         video_url = ?, image_url = ?, allow_interactions = ?, allow_comments = ?
      WHERE id = ?`
   ).bind(
     input.title,
@@ -1129,6 +1155,7 @@ async function handleAdminPostUpdate(request, env, postId) {
     input.summary,
     input.body,
     input.videoUrl,
+    input.imageUrl,
     boolToInt(input.allowInteractions),
     boolToInt(input.allowComments),
     postId

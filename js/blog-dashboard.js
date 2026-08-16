@@ -25,6 +25,11 @@ async function bootstrap() {
 
   updateDashboardAuthUI();
 
+  if (state.user && !state.user.isAdmin) {
+    window.location.href = './blog.html';
+    return;
+  }
+
   if (!state.user?.isAdmin) {
     setStatus('Login with an admin account to manage posts.');
     return;
@@ -184,6 +189,18 @@ function syncEditForm() {
   editForm.elements.body.value = post.body;
   editForm.elements.allowInteractions.checked = Boolean(post.allowInteractions);
   editForm.elements.allowComments.checked = Boolean(post.allowComments);
+
+  const currentImageWrap = document.getElementById('edit-current-image-wrap');
+  const currentImage = document.getElementById('edit-current-image');
+  if (currentImageWrap && currentImage) {
+    if (post.imageUrl) {
+      currentImage.src = post.imageUrl;
+      currentImageWrap.classList.remove('hidden');
+    } else {
+      currentImage.src = '';
+      currentImageWrap.classList.add('hidden');
+    }
+  }
 }
 
 async function createPost() {
@@ -192,9 +209,9 @@ async function createPost() {
     return;
   }
 
-  const payload = collectPostPayload(createForm);
-
   try {
+    const payload = await collectPostPayload(createForm);
+
     await fetchJson('/api/blog/admin/posts', {
       method: 'POST',
       headers: {
@@ -224,9 +241,9 @@ async function savePost() {
     return;
   }
 
-  const payload = collectPostPayload(editForm);
-
   try {
+    const payload = await collectPostPayload(editForm);
+
     await fetchJson(`/api/blog/admin/posts/${encodeURIComponent(postId)}`, {
       method: 'PUT',
       headers: {
@@ -243,8 +260,28 @@ async function savePost() {
   }
 }
 
-function collectPostPayload(form) {
-  return {
+const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+
+function readFileAsDataUrl(fileInput) {
+  const file = fileInput?.files?.[0];
+  if (!file) {
+    return Promise.resolve(null);
+  }
+
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return Promise.reject(new Error(`${file.name} is too large (max 8MB).`));
+  }
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error(`Failed to read ${file.name}.`));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function collectPostPayload(form) {
+  const payload = {
     title: String(form.elements.title.value || '').trim(),
     category: String(form.elements.category.value || '').trim(),
     type: String(form.elements.type.value || '').trim(),
@@ -254,6 +291,18 @@ function collectPostPayload(form) {
     allowInteractions: Boolean(form.elements.allowInteractions.checked),
     allowComments: Boolean(form.elements.allowComments.checked)
   };
+
+  const uploadedVideo = await readFileAsDataUrl(form.elements.videoFile);
+  if (uploadedVideo) {
+    payload.videoUrl = uploadedVideo;
+  }
+
+  const uploadedImage = await readFileAsDataUrl(form.elements.imageFile);
+  if (uploadedImage) {
+    payload.imageUrl = uploadedImage;
+  }
+
+  return payload;
 }
 
 function authHeaders() {
@@ -293,24 +342,10 @@ function updateDashboardAuthUI() {
   if (editForm) {
     editForm.classList.toggle('hidden', !isLoggedInAdmin);
   }
-  
-  // If you added a logout button with ID 'dashboard-logout-btn' to your HTML, this will show/hide it!
+
   const dashboardLogoutBtn = document.getElementById('dashboard-logout-btn');
   if (dashboardLogoutBtn) {
     dashboardLogoutBtn.classList.toggle('hidden', !isLoggedInAdmin);
-  }
-}
-function updateDashboardAuthUI() {
-  const isLoggedInAdmin = Boolean(state.token && state.user?.isAdmin);
-
-  if (loginForm) {
-    loginForm.classList.toggle('hidden', isLoggedInAdmin);
-  }
-  if (createForm) {
-    createForm.classList.toggle('hidden', !isLoggedInAdmin);
-  }
-  if (editForm) {
-    editForm.classList.toggle('hidden', !isLoggedInAdmin);
   }
 }
 

@@ -30,6 +30,7 @@ const BLOG_NEWSLETTER_FILE = process.env.BLOG_NEWSLETTER_FILE
   : path.join(__dirname, '..', 'data', 'blog-newsletter.json');
 const BLOG_VERIFY_TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
 const BLOG_RESET_TOKEN_TTL_MS = 30 * 60 * 1000;
+const BLOG_MAX_UPLOAD_DATA_URL_LENGTH = 8_000_000;
 const BLOG_ADMIN_USERNAMES = String(process.env.BLOG_ADMIN_USERNAMES || '')
   .split(',')
   .map((entry) => entry.trim().toLowerCase())
@@ -332,6 +333,11 @@ function slugify(value) {
     .slice(0, 48);
 }
 
+function isSafeMediaUrl(value, dataUrlPrefix) {
+  if (!value) return true;
+  return value.startsWith('https://') || value.startsWith(dataUrlPrefix);
+}
+
 function escapeHtml(value) {
   return value
     .replace(/&/g, '&amp;')
@@ -365,6 +371,7 @@ function getBlogPostResponse(post) {
     summary: post.summary,
     body: post.body,
     videoUrl: post.videoUrl || '',
+    imageUrl: post.imageUrl || '',
     publishedAt: toIsoDate(post.publishedAt),
     allowInteractions: Boolean(post.allowInteractions),
     allowComments: Boolean(post.allowComments),
@@ -1042,7 +1049,16 @@ function createApp() {
     methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Auth-Token']
   }));
-  app.use(express.json({ limit: '20kb' }));
+  const defaultJsonParser = express.json({ limit: '20kb' });
+  const blogAdminPostJsonParser = express.json({ limit: '18mb' });
+  const blogAdminPostRoutePattern = /^\/api\/blog\/admin\/posts(\/[^/]+)?$/;
+
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && blogAdminPostRoutePattern.test(req.path)) {
+      return blogAdminPostJsonParser(req, res, next);
+    }
+    return defaultJsonParser(req, res, next);
+  });
   app.use((req, res, next) => {
     if (req.method === 'TRACE' || req.method === 'TRACK') {
       return res.status(405).json({ error: 'Method not allowed.' });
@@ -1477,6 +1493,7 @@ function createApp() {
     const summary = sanitizeInputText(req.body?.summary, 240);
     const body = sanitizeInputText(req.body?.body, 5000);
     const videoUrl = String(req.body?.videoUrl || '').trim();
+    const imageUrl = String(req.body?.imageUrl || '').trim();
     const allowInteractions = Boolean(req.body?.allowInteractions);
     const allowComments = Boolean(req.body?.allowComments);
 
@@ -1496,6 +1513,22 @@ function createApp() {
       return res.status(400).json({ error: 'Video URL can only be set for vlog posts.' });
     }
 
+    if (videoUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+      return res.status(400).json({ error: 'Uploaded video is too large.' });
+    }
+
+    if (imageUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+      return res.status(400).json({ error: 'Uploaded photo is too large.' });
+    }
+
+    if (!isSafeMediaUrl(videoUrl, 'data:video/')) {
+      return res.status(400).json({ error: 'Video URL must be an https link or an uploaded video file.' });
+    }
+
+    if (!isSafeMediaUrl(imageUrl, 'data:image/')) {
+      return res.status(400).json({ error: 'Image URL must be an https link or an uploaded image file.' });
+    }
+
     const slug = slugify(title) || createRandomId().slice(0, 8);
     const postId = `blog-${slug}-${createRandomId().slice(0, 6)}`;
 
@@ -1507,6 +1540,7 @@ function createApp() {
       summary,
       body,
       videoUrl,
+      imageUrl,
       publishedAt: new Date().toISOString(),
       allowInteractions,
       allowComments,
@@ -1547,6 +1581,7 @@ function createApp() {
     const summary = sanitizeInputText(req.body?.summary ?? post.summary, 240);
     const body = sanitizeInputText(req.body?.body ?? post.body, 5000);
     const videoUrl = String(req.body?.videoUrl ?? post.videoUrl ?? '').trim();
+    const imageUrl = String(req.body?.imageUrl ?? post.imageUrl ?? '').trim();
     const allowInteractions = typeof req.body?.allowInteractions === 'boolean'
       ? req.body.allowInteractions
       : post.allowInteractions;
@@ -1566,12 +1601,29 @@ function createApp() {
       return res.status(400).json({ error: 'Video URL can only be set for vlog posts.' });
     }
 
+    if (videoUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+      return res.status(400).json({ error: 'Uploaded video is too large.' });
+    }
+
+    if (imageUrl.length > BLOG_MAX_UPLOAD_DATA_URL_LENGTH) {
+      return res.status(400).json({ error: 'Uploaded photo is too large.' });
+    }
+
+    if (!isSafeMediaUrl(videoUrl, 'data:video/')) {
+      return res.status(400).json({ error: 'Video URL must be an https link or an uploaded video file.' });
+    }
+
+    if (!isSafeMediaUrl(imageUrl, 'data:image/')) {
+      return res.status(400).json({ error: 'Image URL must be an https link or an uploaded image file.' });
+    }
+
     post.title = title;
     post.category = category;
     post.type = type;
     post.summary = summary;
     post.body = body;
     post.videoUrl = videoUrl;
+    post.imageUrl = imageUrl;
     post.allowInteractions = Boolean(allowInteractions);
     post.allowComments = Boolean(allowComments);
 

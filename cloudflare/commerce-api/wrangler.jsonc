@@ -19,7 +19,7 @@
     }
   ],
   "vars": {
-    "ALLOWED_ORIGINS": "https://jennibee.art",
+    "ALLOWED_ORIGINS": "https://jennibee.art,https://www.jennibee.art,https://jennibwebsite.pages.dev",
     "PUBLIC_SITE_ORIGIN": "https://jennibee.art",
     "BLOG_ADMIN_USERNAMES": "j3nn1b33",
     "BLOG_ADMIN_EMAILS": "jenni@jennibee.art",
