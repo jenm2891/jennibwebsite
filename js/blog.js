@@ -20,6 +20,13 @@ const heroAccountEl = document.getElementById('hero-account');
 const heroUsernamePillEl = document.getElementById('hero-username-pill');
 const userPillEl = document.getElementById('user-pill');
 
+// Post Modal Elements
+const postModal = document.getElementById('post-modal');
+const closePostModalBtn = document.getElementById('close-post-modal');
+const postModalTitle = document.getElementById('post-modal-title');
+const postModalContent = document.getElementById('post-modal-content');
+const postStore = {};
+
 // Newsletter Elements
 const newsletterForm = document.getElementById('newsletter-form');
 const newsletterEmail = document.getElementById('newsletter-email');
@@ -51,6 +58,10 @@ function bindEvents() {
 
   closeAuthModalBtn?.addEventListener('click', () => {
     authModal?.classList.add('hidden');
+  });
+
+  closePostModalBtn?.addEventListener('click', () => {
+    postModal?.classList.add('hidden');
   });
 
   loginTabBtn?.addEventListener('click', () => setAuthTab('login'));
@@ -268,7 +279,7 @@ function renderPosts(sections, posts) {
     // Build a card for each post
     sectionPosts.forEach(post => {
       const article = document.createElement('article');
-      article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col';
+      article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col cursor-pointer';
 
       let mediaHtml = '';
       if (post.imageUrl) {
@@ -289,7 +300,7 @@ function renderPosts(sections, posts) {
         <div class="flex items-center gap-2 mb-2 text-xs opacity-70">
           <span>${dateStr}</span>
           <span>&bull;</span>
-          <span class="capitalize px-2 py-0.5 rounded-full border border-current/20">${post.type}</span>
+          <span class="capitalize px-2 py-0.5 rounded-full border border-current/20">${escapeHtml(post.type)}</span>
         </div>
         <h3 class="font-display text-xl font-bold mb-2">${escapeHtml(post.title)}</h3>
         <p class="text-sm opacity-85 mb-4">${escapeHtml(post.summary)}</p>
@@ -302,6 +313,17 @@ function renderPosts(sections, posts) {
           </button>
         </div>
       `;
+
+      // Store post data for modal
+      postStore[post.id] = post;
+
+      // Add click handler to open post modal
+      article.addEventListener('click', (e) => {
+        if (!e.target.closest('.post-like-btn, .post-comment-btn')) {
+          openPostModal(post);
+        }
+      });
+
       grid.appendChild(article);
     });
 
@@ -446,10 +468,45 @@ function initializeThemeToggle() {
     });
   }
 
+  }
+
   function applyDark() {
     body.classList.replace('light-mode', 'dark-mode');
     localStorage.setItem('theme', 'dark');
     document.querySelector('.light-icon')?.classList.add('hidden');
     document.querySelector('.dark-icon')?.classList.remove('hidden');
   }
+}
+
+// --- POST MODAL ---
+function openPostModal(post) {
+  if (postModalTitle) postModalTitle.textContent = post.title;
+
+  if (postModalContent) {
+    let content = '';
+
+    // Add post metadata
+    const dateStr = new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    content += `<div class="text-sm opacity-70 mb-4">Published ${dateStr} • <span class="capitalize">${escapeHtml(post.type)}</span></div>`;
+
+    // Add image if present
+    if (post.imageUrl) {
+      content += `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" class="w-full rounded-lg mb-6">`;
+    }
+
+    // Add video if present
+    if (post.type === 'vlog' && post.videoUrl) {
+      const isUploadedVideo = post.videoUrl.startsWith('data:video');
+      content += isUploadedVideo
+        ? `<div class="aspect-video mb-6 rounded-lg overflow-hidden"><video src="${escapeHtml(post.videoUrl)}" class="w-full h-full" controls></video></div>`
+        : `<div class="aspect-video mb-6 rounded-lg overflow-hidden"><iframe src="${escapeHtml(post.videoUrl)}" class="w-full h-full" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" referrerpolicy="no-referrer"></iframe></div>`;
+    }
+
+    // Add post body content (escaped for security)
+    content += `<div class="prose prose-invert max-w-none">${escapeHtml(post.body)}</div>`;
+
+    postModalContent.innerHTML = content;
+  }
+
+  postModal?.classList.remove('hidden');
 }
