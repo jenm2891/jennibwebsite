@@ -467,8 +467,6 @@ function initializeThemeToggle() {
     });
   }
 
-  }
-
   function applyDark() {
     body.classList.replace('light-mode', 'dark-mode');
     localStorage.setItem('theme', 'dark');
