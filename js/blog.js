@@ -35,6 +35,7 @@ const blogSectionsEl = document.getElementById('blog-sections');
 
 initializeThemeToggle();
 bindEvents();
+window.lucide?.createIcons();
 void bootstrap();
 
 async function bootstrap() {
@@ -450,8 +451,6 @@ function toBlogApiUrl(url) {
 function initializeThemeToggle() {
   const body = document.body;
   const toggle = document.getElementById('theme-toggle');
-
-  window.lucide?.createIcons();
 
   if (toggle) {
     if (localStorage.getItem('theme') === 'dark') applyDark();
