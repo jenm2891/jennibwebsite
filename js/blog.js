@@ -249,9 +249,9 @@ function renderPosts(sections, posts) {
   // Group posts by their categories
   sections.forEach(section => {
     const sectionPosts = posts.filter(p => p.category === section);
-    
+
     // If there are no posts in this category, skip it
-    if (sectionPosts.length === 0) return; 
+    if (sectionPosts.length === 0) return;
 
     const sectionWrapper = document.createElement('div');
     sectionWrapper.className = 'blog-category-section mb-10';
@@ -269,7 +269,7 @@ function renderPosts(sections, posts) {
     sectionPosts.forEach(post => {
       const article = document.createElement('article');
       article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col';
-      
+
       let mediaHtml = '';
       if (post.imageUrl) {
         mediaHtml += `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy">`;
@@ -294,8 +294,12 @@ function renderPosts(sections, posts) {
         <h3 class="font-display text-xl font-bold mb-2">${escapeHtml(post.title)}</h3>
         <p class="text-sm opacity-85 mb-4">${escapeHtml(post.summary)}</p>
         <div class="flex items-center gap-4 text-sm font-medium mt-auto border-t border-current/10 pt-3">
-          <span class="flex items-center gap-1 ${post.likedByCurrentUser ? 'text-pink-500' : 'opacity-70'}"><i data-lucide="heart" class="w-4 h-4"></i> ${post.likes}</span>
-          <span class="flex items-center gap-1 opacity-70"><i data-lucide="message-circle" class="w-4 h-4"></i> ${post.comments?.length || 0}</span>
+          <button class="post-like-btn flex items-center gap-1 ${post.likedByCurrentUser ? 'text-pink-500' : 'opacity-70'} hover:text-pink-500 transition cursor-pointer" data-post-id="${escapeHtml(post.id)}">
+            <i data-lucide="heart" class="w-4 h-4"></i> <span class="like-count">${post.likes}</span>
+          </button>
+          <button class="post-comment-btn flex items-center gap-1 opacity-70 hover:opacity-100 transition cursor-pointer" data-post-id="${escapeHtml(post.id)}">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> <span class="comment-count">${post.comments?.length || 0}</span>
+          </button>
         </div>
       `;
       grid.appendChild(article);
@@ -307,6 +311,74 @@ function renderPosts(sections, posts) {
 
   // Tell Lucide to draw the heart/message icons we just generated
   window.lucide?.createIcons();
+
+  // Add event listeners to like and comment buttons
+  attachPostInteractionHandlers();
+}
+
+function attachPostInteractionHandlers() {
+  document.querySelectorAll('.post-like-btn').forEach(btn => {
+    btn.addEventListener('click', handleLikeClick);
+  });
+
+  document.querySelectorAll('.post-comment-btn').forEach(btn => {
+    btn.addEventListener('click', handleCommentClick);
+  });
+}
+
+async function handleLikeClick(event) {
+  event.preventDefault();
+
+  if (!state.token) {
+    authModal?.classList.remove('hidden');
+    setStatus('Sign in to like posts');
+    return;
+  }
+
+  const postId = event.currentTarget.getAttribute('data-post-id');
+  const likeCountEl = event.currentTarget.querySelector('.like-count');
+
+  try {
+    const data = await fetchJson(`/api/blog/posts/${postId}/like`, {
+      method: 'POST',
+      headers: authHeaders()
+    });
+
+    event.currentTarget.classList.toggle('text-pink-500');
+    event.currentTarget.classList.toggle('opacity-70');
+    if (likeCountEl) likeCountEl.textContent = data.likes;
+  } catch (error) {
+    setStatus(error.message || 'Failed to like post');
+  }
+}
+
+async function handleCommentClick(event) {
+  event.preventDefault();
+
+  if (!state.token) {
+    authModal?.classList.remove('hidden');
+    setStatus('Sign in to comment on posts');
+    return;
+  }
+
+  const postId = event.currentTarget.getAttribute('data-post-id');
+  const comment = prompt('Add your comment:');
+
+  if (!comment || !comment.trim()) return;
+
+  try {
+    const data = await fetchJson(`/api/blog/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: comment.trim() })
+    });
+
+    const commentCountEl = event.currentTarget.querySelector('.comment-count');
+    if (commentCountEl) commentCountEl.textContent = data.comments?.length || 0;
+    setStatus('Comment added!');
+  } catch (error) {
+    setStatus(error.message || 'Failed to add comment');
+  }
 }
 
 // A helper to make sure any text from the database is safe to display
