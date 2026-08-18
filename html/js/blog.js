@@ -1,5 +1,3 @@
-window.lucide?.createIcons();
-
 const BLOG_AUTH_STORAGE_KEY = 'jennib_blog_auth_token_v1';
 const BLOG_API_BASE = resolveBlogApiBase();
 const state = {
@@ -452,7 +450,9 @@ function toBlogApiUrl(url) {
 function initializeThemeToggle() {
   const body = document.body;
   const toggle = document.getElementById('theme-toggle');
-  
+
+  window.lucide?.createIcons();
+
   if (toggle) {
     if (localStorage.getItem('theme') === 'dark') applyDark();
 
