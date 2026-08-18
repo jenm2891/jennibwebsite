@@ -124,9 +124,42 @@ header nav a:hover {
   gap: 0.6rem;
 }
 
+.hero-account {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.hero-account.hidden {
+  display: none;
+}
+
 .hero-auth-btn {
   font-size: 0.78rem;
   padding: 0.3rem 0.7rem;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 0.4rem;
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 0.5rem;
+}
+
+.auth-tab-btn {
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  opacity: 0.6;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.auth-tab-btn.is-active {
+  opacity: 1;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
 .newsletter-form {
@@ -230,6 +263,10 @@ header nav a:hover {
 .auth-grid {
   display: grid;
   gap: 0.5rem;
+}
+
+.auth-grid.hidden {
+  display: none;
 }
 
 .auth-actions {

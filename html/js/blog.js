@@ -11,9 +11,21 @@ const state = {
 const openAuthModalBtn = document.getElementById('open-auth-modal');
 const closeAuthModalBtn = document.getElementById('close-auth-modal');
 const authModal = document.getElementById('auth-modal');
-const authForm = document.getElementById('auth-form');
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const loginTabBtn = document.getElementById('login-tab-btn');
+const signupTabBtn = document.getElementById('signup-tab-btn');
 const authStatusEl = document.getElementById('auth-status');
-const registerBtn = document.getElementById('register-btn');
+const heroAccountEl = document.getElementById('hero-account');
+const heroUsernamePillEl = document.getElementById('hero-username-pill');
+const userPillEl = document.getElementById('user-pill');
+
+// Post Modal Elements
+const postModal = document.getElementById('post-modal');
+const closePostModalBtn = document.getElementById('close-post-modal');
+const postModalTitle = document.getElementById('post-modal-title');
+const postModalContent = document.getElementById('post-modal-content');
+const postStore = {};
 
 // Newsletter Elements
 const newsletterForm = document.getElementById('newsletter-form');
@@ -31,7 +43,9 @@ async function bootstrap() {
   if (state.token) {
     await fetchCurrentUser();
   }
-  
+
+  updateAuthUI();
+
   // Fetch and display posts when the page loads
   await fetchPublicPosts();
 }
@@ -46,17 +60,27 @@ function bindEvents() {
     authModal?.classList.add('hidden');
   });
 
-  authForm?.addEventListener('submit', (event) => {
+  closePostModalBtn?.addEventListener('click', () => {
+    postModal?.classList.add('hidden');
+  });
+
+  loginTabBtn?.addEventListener('click', () => setAuthTab('login'));
+  signupTabBtn?.addEventListener('click', () => setAuthTab('signup'));
+
+  loginForm?.addEventListener('submit', (event) => {
     event.preventDefault();
-    const username = document.getElementById('auth-username')?.value;
-    const password = document.getElementById('auth-password')?.value;
+    const username = document.getElementById('login-username')?.value;
+    const password = document.getElementById('login-password')?.value;
     void login(username, password);
   });
 
-  registerBtn?.addEventListener('click', (event) => {
+  signupForm?.addEventListener('submit', (event) => {
     event.preventDefault();
     void registerPublic();
   });
+
+  document.getElementById('logout-btn')?.addEventListener('click', () => logout());
+  document.getElementById('hero-logout-btn')?.addEventListener('click', () => logout());
 
   // Newsletter Subscription
   newsletterForm?.addEventListener('submit', (event) => {
@@ -86,13 +110,15 @@ async function login(username, password) {
     state.user = data.user;
     localStorage.setItem(BLOG_AUTH_STORAGE_KEY, data.token);
 
+    if (state.user.isAdmin) {
+      window.location.href = './blog-dashboard.html';
+      return;
+    }
+
     setStatus(`Welcome back, @${state.user.username}!`);
     setTimeout(() => authModal?.classList.add('hidden'), 1500);
-      
-    if (state.user.isAdmin) {
-      document.getElementById('author-dashboard-link-wrap')?.classList.remove('hidden');
-    }
-    
+    updateAuthUI();
+
     // Refresh posts to show correct "like" status for the logged-in user
     await fetchPublicPosts();
     
@@ -102,9 +128,9 @@ async function login(username, password) {
 }
 
 async function registerPublic() {
-  const username = String(document.getElementById('auth-username')?.value || '').trim().toLowerCase();
-  const email = String(document.getElementById('auth-email')?.value || '').trim();
-  const password = String(document.getElementById('auth-password')?.value || '');
+  const username = String(document.getElementById('signup-username')?.value || '').trim().toLowerCase();
+  const email = String(document.getElementById('signup-email')?.value || '').trim();
+  const password = String(document.getElementById('signup-password')?.value || '');
 
   if (!username || !email || !password) {
     setStatus('Username, email, and password are required.');
@@ -124,6 +150,7 @@ async function registerPublic() {
     
     setStatus(`Account created! Welcome, @${state.user.username}.`);
     setTimeout(() => authModal?.classList.add('hidden'), 2000);
+    updateAuthUI();
   } catch (error) {
     setStatus(error.message || 'Registration failed.');
   }
@@ -135,15 +162,50 @@ async function fetchCurrentUser() {
       headers: authHeaders()
     });
     state.user = data.user;
-    
-    if (state.user?.isAdmin) {
-       document.getElementById('author-dashboard-link-wrap')?.classList.remove('hidden');
-    }
   } catch {
     state.user = null;
     state.token = '';
     localStorage.removeItem(BLOG_AUTH_STORAGE_KEY);
   }
+}
+
+function logout() {
+  state.user = null;
+  state.token = '';
+  localStorage.removeItem(BLOG_AUTH_STORAGE_KEY);
+  updateAuthUI();
+  setStatus('Logged out.');
+  void fetchPublicPosts();
+}
+
+function updateAuthUI() {
+  const isLoggedIn = Boolean(state.token && state.user);
+
+  openAuthModalBtn?.classList.toggle('hidden', isLoggedIn);
+  heroAccountEl?.classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('logout-btn')?.classList.toggle('hidden', !isLoggedIn);
+  document.getElementById('author-dashboard-link-wrap')?.classList.toggle('hidden', !state.user?.isAdmin);
+
+  if (isLoggedIn) {
+    const label = `@${state.user.username}`;
+    if (heroUsernamePillEl) heroUsernamePillEl.textContent = label;
+    if (userPillEl) {
+      userPillEl.textContent = label;
+      userPillEl.classList.remove('hidden');
+    }
+  } else if (userPillEl) {
+    userPillEl.classList.add('hidden');
+  }
+}
+
+function setAuthTab(tab) {
+  const isLogin = tab === 'login';
+  loginForm?.classList.toggle('hidden', !isLogin);
+  signupForm?.classList.toggle('hidden', isLogin);
+  loginTabBtn?.classList.toggle('is-active', isLogin);
+  signupTabBtn?.classList.toggle('is-active', !isLogin);
+  loginTabBtn?.setAttribute('aria-selected', String(isLogin));
+  signupTabBtn?.setAttribute('aria-selected', String(!isLogin));
 }
 
 // --- NEWSLETTER FUNCTION ---
@@ -198,9 +260,9 @@ function renderPosts(sections, posts) {
   // Group posts by their categories
   sections.forEach(section => {
     const sectionPosts = posts.filter(p => p.category === section);
-    
+
     // If there are no posts in this category, skip it
-    if (sectionPosts.length === 0) return; 
+    if (sectionPosts.length === 0) return;
 
     const sectionWrapper = document.createElement('div');
     sectionWrapper.className = 'blog-category-section mb-10';
@@ -217,11 +279,17 @@ function renderPosts(sections, posts) {
     // Build a card for each post
     sectionPosts.forEach(post => {
       const article = document.createElement('article');
-      article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col';
-      
+      article.className = 'blog-surface rounded-2xl p-5 border border-current/10 shadow-sm transition hover:shadow-md flex flex-col cursor-pointer';
+
       let mediaHtml = '';
+      if (post.imageUrl) {
+        mediaHtml += `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" class="w-full h-48 object-cover rounded-xl mb-4" loading="lazy">`;
+      }
       if (post.type === 'vlog' && post.videoUrl) {
-         mediaHtml = `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><iframe src="${post.videoUrl}" class="w-full h-full" frameborder="0" allowfullscreen></iframe></div>`;
+        const isUploadedVideo = post.videoUrl.startsWith('data:video');
+        mediaHtml += isUploadedVideo
+          ? `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><video src="${escapeHtml(post.videoUrl)}" class="w-full h-full" controls></video></div>`
+          : `<div class="aspect-video mb-4 bg-black/5 rounded-xl overflow-hidden"><iframe src="${escapeHtml(post.videoUrl)}" class="w-full h-full" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" referrerpolicy="no-referrer"></iframe></div>`;
       }
 
       const dateStr = new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
@@ -232,15 +300,30 @@ function renderPosts(sections, posts) {
         <div class="flex items-center gap-2 mb-2 text-xs opacity-70">
           <span>${dateStr}</span>
           <span>&bull;</span>
-          <span class="capitalize px-2 py-0.5 rounded-full border border-current/20">${post.type}</span>
+          <span class="capitalize px-2 py-0.5 rounded-full border border-current/20">${escapeHtml(post.type)}</span>
         </div>
         <h3 class="font-display text-xl font-bold mb-2">${escapeHtml(post.title)}</h3>
         <p class="text-sm opacity-85 mb-4">${escapeHtml(post.summary)}</p>
         <div class="flex items-center gap-4 text-sm font-medium mt-auto border-t border-current/10 pt-3">
-          <span class="flex items-center gap-1 ${post.likedByCurrentUser ? 'text-pink-500' : 'opacity-70'}"><i data-lucide="heart" class="w-4 h-4"></i> ${post.likes}</span>
-          <span class="flex items-center gap-1 opacity-70"><i data-lucide="message-circle" class="w-4 h-4"></i> ${post.comments?.length || 0}</span>
+          <button class="post-like-btn flex items-center gap-1 ${post.likedByCurrentUser ? 'text-pink-500' : 'opacity-70'} hover:text-pink-500 transition cursor-pointer" data-post-id="${escapeHtml(post.id)}">
+            <i data-lucide="heart" class="w-4 h-4"></i> <span class="like-count">${post.likes}</span>
+          </button>
+          <button class="post-comment-btn flex items-center gap-1 opacity-70 hover:opacity-100 transition cursor-pointer" data-post-id="${escapeHtml(post.id)}">
+            <i data-lucide="message-circle" class="w-4 h-4"></i> <span class="comment-count">${post.comments?.length || 0}</span>
+          </button>
         </div>
       `;
+
+      // Store post data for modal
+      postStore[post.id] = post;
+
+      // Add click handler to open post modal
+      article.addEventListener('click', (e) => {
+        if (!e.target.closest('.post-like-btn, .post-comment-btn')) {
+          openPostModal(post);
+        }
+      });
+
       grid.appendChild(article);
     });
 
@@ -250,6 +333,74 @@ function renderPosts(sections, posts) {
 
   // Tell Lucide to draw the heart/message icons we just generated
   window.lucide?.createIcons();
+
+  // Add event listeners to like and comment buttons
+  attachPostInteractionHandlers();
+}
+
+function attachPostInteractionHandlers() {
+  document.querySelectorAll('.post-like-btn').forEach(btn => {
+    btn.addEventListener('click', handleLikeClick);
+  });
+
+  document.querySelectorAll('.post-comment-btn').forEach(btn => {
+    btn.addEventListener('click', handleCommentClick);
+  });
+}
+
+async function handleLikeClick(event) {
+  event.preventDefault();
+
+  if (!state.token) {
+    authModal?.classList.remove('hidden');
+    setStatus('Sign in to like posts');
+    return;
+  }
+
+  const postId = event.currentTarget.getAttribute('data-post-id');
+  const likeCountEl = event.currentTarget.querySelector('.like-count');
+
+  try {
+    const data = await fetchJson(`/api/blog/posts/${postId}/like`, {
+      method: 'POST',
+      headers: authHeaders()
+    });
+
+    event.currentTarget.classList.toggle('text-pink-500');
+    event.currentTarget.classList.toggle('opacity-70');
+    if (likeCountEl) likeCountEl.textContent = data.likes;
+  } catch (error) {
+    setStatus(error.message || 'Failed to like post');
+  }
+}
+
+async function handleCommentClick(event) {
+  event.preventDefault();
+
+  if (!state.token) {
+    authModal?.classList.remove('hidden');
+    setStatus('Sign in to comment on posts');
+    return;
+  }
+
+  const postId = event.currentTarget.getAttribute('data-post-id');
+  const comment = prompt('Add your comment:');
+
+  if (!comment || !comment.trim()) return;
+
+  try {
+    const data = await fetchJson(`/api/blog/posts/${postId}/comments`, {
+      method: 'POST',
+      headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: comment.trim() })
+    });
+
+    const commentCountEl = event.currentTarget.querySelector('.comment-count');
+    if (commentCountEl) commentCountEl.textContent = data.comments?.length || 0;
+    setStatus('Comment added!');
+  } catch (error) {
+    setStatus(error.message || 'Failed to add comment');
+  }
 }
 
 // A helper to make sure any text from the database is safe to display
@@ -317,10 +468,45 @@ function initializeThemeToggle() {
     });
   }
 
+  }
+
   function applyDark() {
     body.classList.replace('light-mode', 'dark-mode');
     localStorage.setItem('theme', 'dark');
     document.querySelector('.light-icon')?.classList.add('hidden');
     document.querySelector('.dark-icon')?.classList.remove('hidden');
   }
+}
+
+// --- POST MODAL ---
+function openPostModal(post) {
+  if (postModalTitle) postModalTitle.textContent = post.title;
+
+  if (postModalContent) {
+    let content = '';
+
+    // Add post metadata
+    const dateStr = new Date(post.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+    content += `<div class="text-sm opacity-70 mb-4">Published ${dateStr} • <span class="capitalize">${escapeHtml(post.type)}</span></div>`;
+
+    // Add image if present
+    if (post.imageUrl) {
+      content += `<img src="${escapeHtml(post.imageUrl)}" alt="${escapeHtml(post.title)}" class="w-full rounded-lg mb-6">`;
+    }
+
+    // Add video if present
+    if (post.type === 'vlog' && post.videoUrl) {
+      const isUploadedVideo = post.videoUrl.startsWith('data:video');
+      content += isUploadedVideo
+        ? `<div class="aspect-video mb-6 rounded-lg overflow-hidden"><video src="${escapeHtml(post.videoUrl)}" class="w-full h-full" controls></video></div>`
+        : `<div class="aspect-video mb-6 rounded-lg overflow-hidden"><iframe src="${escapeHtml(post.videoUrl)}" class="w-full h-full" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-presentation allow-popups" referrerpolicy="no-referrer"></iframe></div>`;
+    }
+
+    // Add post body content (escaped for security)
+    content += `<div class="prose prose-invert max-w-none">${escapeHtml(post.body)}</div>`;
+
+    postModalContent.innerHTML = content;
+  }
+
+  postModal?.classList.remove('hidden');
 }
