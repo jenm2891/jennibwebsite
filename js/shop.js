@@ -6,8 +6,6 @@ const COMMERCE_API_BASE = resolveCommerceApiBase();
 
 // Add real image paths here as you upload assets (e.g. '/images/the-chair.jpg').
 const CARD_IMAGE_BY_PIECE = {
-  'King Germutt Sticker': 'Images/kinggermutt.png',
-  'Germutt # 3': 'Images/Germutt3.png',
   'The Chair': 'Images/Chair.png',
   'The Kitchen': 'Images/thekitchen.PNG',
   'The Bookshelf': 'Images/thebookshelf.PNG',
@@ -21,40 +19,10 @@ const CARD_IMAGE_BY_PIECE = {
   'Floral Fall Pattern': ''
 };
 
-const STICKER_PACK_LISTINGS = [
-  { pieceName: 'King Germutt Sticker', label: 'High-Quality Vinyl Sticker 5 pack', price: 500 },
-  { pieceName: 'Germutt # 3', label: 'High-Quality Vinyl Sticker 5 pack', price: 500 }
-];
-
 const DIGITAL_ART_PIECES = [
   'The Chair',
   'The Kitchen',
   'The Bookshelf',
-  'Sunrise',
-  'Dreams of Dreaming'
-];
-
-const ONE_OF_ONE_LISTINGS = [
-  {
-    pieceName: 'The Window',
-    label: 'Original Physical Artwork (Small 9x12) - Acrylic on Archival Paper' ,
-    price: 40000
-  },
-  {
-    pieceName: 'Heart of the 80s',
-    label: 'Original Physical Artwork (Small 5x9) - Acrylic on Archival Paper',
-    price: 25000
-  },
-  {
-    pieceName: 'Floral Fall',
-    label: 'Original Physical Artwork (Small 5x9) - Acrylic on Archival Paper',
-    price: 25000
-  }, 
-];
-
-const PATTERN_PIECES = [
-  'Summers End Pattern',
-  'Floral Fall Pattern'
 ];
 
 const DIGITAL_ART_OPTIONS = [
@@ -118,12 +86,19 @@ function buildFallbackCatalog() {
   };
 
   const sections = [
+      {
+      title: 'Digital Art',
+      tone: 'yellow',
+      useDropdown: true,
+      note: 'All physical prints are signed, dated, and include the hand-written edition number plus an authentication seal.',
+      cards: buildCards(DIGITAL_ART_PIECES, DIGITAL_ART_OPTIONS, 'Digital Art')
+    },
     {
       title: 'Sticker Packs',
       tone: 'pink',
       useDropdown: false,
       note: 'Exclusive sticker bundles for collectors and shipping-ready merch drops.',
-      cards: buildListingCards(STICKER_PACK_LISTINGS, 'Sticker Packs')
+      cards: []
     },
     {
       title: 'Digital Downloads',
@@ -133,25 +108,18 @@ function buildFallbackCatalog() {
       cards: []
     },
     {
-      title: 'Digital Art',
-      tone: 'yellow',
-      useDropdown: true,
-      note: 'All physical prints are signed, dated, and include the hand-written edition number plus an authentication seal.',
-      cards: buildCards(DIGITAL_ART_PIECES, DIGITAL_ART_OPTIONS, 'Digital Art')
-    },
-    {
       title: '1/1 Art',
       tone: 'blue',
       useDropdown: false,
       note: 'Each 1/1 piece is listed once with its exact format and size details.',
-      cards: buildListingCards(ONE_OF_ONE_LISTINGS, '1/1 Art')
+      cards: []
     },
     {
       title: 'Patterns',
       tone: 'lavender',
-      useDropdown: true,
+      useDropdown: false,
       note: 'Choose either a non-commercial or commercial pattern license for each pattern piece.',
-      cards: buildCards(PATTERN_PIECES, PATTERN_OPTIONS, 'Patterns')
+      cards: []
     }
   ];
 
@@ -332,7 +300,7 @@ function renderCatalog() {
     if (!grid.children.length) {
       const emptyState = document.createElement('p');
       emptyState.className = 'shop-category-note';
-      emptyState.textContent = 'No downloadable pieces listed yet. New releases will appear here.';
+      emptyState.textContent = 'No pieces listed yet. New releases will appear here.';
       section.append(heading, note, emptyState);
       catalogContainer.append(section);
       return;
@@ -477,7 +445,7 @@ function persistCart() {
   localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   window.dispatchEvent(new Event('cart-updated'));
 }
-
+f
 function formatCurrency(amountInCents) {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
