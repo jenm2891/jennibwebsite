@@ -5,12 +5,6 @@ const commissionPackages = {
   'commission-1': { id: 'commission-1', name: 'Personal Use Commission', price: 35000 },
   'commission-2': { id: 'commission-2', name: 'Commercial Vector Commission', price: 70000 },
   'commission-3': { id: 'commission-3', name: 'NFT Custom Mint Add-On', price: 15000 },
-  'commission-4': { id: 'commission-4', name: 'CMS Foundations Build', price: 120000 },
-  'commission-5': { id: 'commission-5', name: 'Interactive Front-End Build', price: 350000 },
-  'commission-6': { id: 'commission-6', name: 'Full-Stack Architecture (1 hour)', price: 6500 },
-  'commission-7': { id: 'commission-7', name: 'Smart Contract Launch', price: 220000 },
-  'commission-8': { id: 'commission-8', name: 'dApp Front-End Experience', price: 320000 },
-  'commission-9': { id: 'commission-9', name: 'Full dApp Product Stack', price: 550000 }
 };
 
 bindCommissionButtons();
