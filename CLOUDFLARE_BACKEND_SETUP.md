@@ -110,7 +110,7 @@ Set this before loading `blog.js`, `blog-dashboard.js`, `shop.js`, and `checkout
 
 ```html
 <script>
-  window.__CF_API_BASE = "https://api.jennibee.art";
+  window.__CF_API_BASE = "https://backend.jennibee.art";
 </script>
 ```
 
@@ -120,7 +120,7 @@ Fallback support remains for `window.__COMMERCE_API_BASE` and `window.__BLOG_API
 
 Attach your Worker to a custom domain in Cloudflare, such as:
 
-- `https://api.jennibee.art`
+- `https://backend.jennibee.art`
 
 Then set `window.__CF_API_BASE` to that domain in your frontend pages.
 
@@ -129,7 +129,7 @@ Then set `window.__CF_API_BASE` to that domain in your frontend pages.
 Run endpoint checks against your Cloudflare API domain:
 
 ```bash
-CF_API_BASE="https://api.jennibee.art" npm run cf:cutover:verify
+CF_API_BASE="https://backend.jennibee.art" npm run cf:cutover:verify
 ```
 
 This verifies health, commerce routes, blog routes, and admin auth guarding in one pass.
